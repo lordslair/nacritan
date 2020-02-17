@@ -12,8 +12,7 @@ try {
 header('Access-Control-Allow-Origin: *');
 
 $json = file_get_contents('php://input');
-
-  $arr = json_decode($json, true);
+$arr  = json_decode($json, true);
 
 if ( $arr )
 {
@@ -36,18 +35,18 @@ if ( $arr )
       {
         if ( !is_null( $place['id']) and !is_null( $place['townId'] ) ) // to exclude portals
         {
-          $sql_places = 'INSERT OR REPLACE INTO pcs ( id, level, name, wounds, guildId, guildName, x, y )
+          $sql_places = 'INSERT OR REPLACE INTO places ( id, level, name, townId, townName, x, y )
                                            VALUES (
-                                                   COALESCE(?, (SELECT id        FROM places WHERE id = '.$places['id'].')),
-                                                   COALESCE(?, (SELECT level     FROM places WHERE id = '.$places['id'].')),
-                                                   COALESCE(?, (SELECT name      FROM places WHERE id = '.$places['id'].')),
-                                                   COALESCE(?, (SELECT townId    FROM places WHERE id = '.$places['id'].')),
-                                                   COALESCE(?, (SELECT townName  FROM places WHERE id = '.$places['id'].')),
-                                                   COALESCE(?, (SELECT x         FROM places WHERE id = '.$places['id'].')),
-                                                   COALESCE(?, (SELECT y         FROM places WHERE id = '.$places['id'].'))
+                                                   COALESCE(?, (SELECT id        FROM places WHERE id = '.$place['id'].')),
+                                                   COALESCE(?, (SELECT level     FROM places WHERE id = '.$place['id'].')),
+                                                   COALESCE(?, (SELECT name      FROM places WHERE id = '.$place['id'].')),
+                                                   COALESCE(?, (SELECT townId    FROM places WHERE id = '.$place['id'].')),
+                                                   COALESCE(?, (SELECT townName  FROM places WHERE id = '.$place['id'].')),
+                                                   COALESCE(?, (SELECT x         FROM places WHERE id = '.$place['id'].')),
+                                                   COALESCE(?, (SELECT y         FROM places WHERE id = '.$place['id'].'))
                                                   )';
 
-          $req_places = $db_handle->prepare($sql_pcs);
+          $req_places = $db_handle->prepare($sql_places);
           $req_places->execute(array($place['id'], $place['level'], $place['name'], $place['townId'], $place['townName'], $elem['x'], $elem['y']));
         }
       }
