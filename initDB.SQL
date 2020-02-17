@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS pcs (
+id        INT  NOT NULL PRIMARY KEY,
+level     INT  NOT NULL,
+name      TEXT NOT NULL,
+wounds    TEXT NULL,
+guildId   INT  NULL,
+guildName TEXT NULL,
+x         INT NOT NULL,
+y         INT NOT NULL)
+
+CREATE TABLE IF NOT EXISTS npcs (
+id        INT  NOT NULL PRIMARY KEY,
+level     INT  NOT NULL,
+name      TEXT NOT NULL,
+wounds    TEXT NULL,
+x         INT NOT NULL,
+y         INT NOT NULL)
+
+CREATE TABLE IF NOT EXISTS places (
+id        INT  NOT NULL PRIMARY KEY,
+level     INT  NOT NULL,
+name      TEXT NOT NULL,
+townId    INT  NULL,
+townName  TEXT NULL,
+x         INT NOT NULL,
+y         INT NOT NULL)
+
+CREATE TABLE IF NOT EXISTS tiles (
+id        INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
+x         INT      NOT NULL,
+y         INT      NOT NULL,
+type      TEXT     NOT NULL)
