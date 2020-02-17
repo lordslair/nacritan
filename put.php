@@ -30,15 +30,26 @@ if ( $arr )
 
     $req_tiles->execute(array($elem['x'], $elem['y'], $elem['type']));
 
-    if ( $elem['items']['places'] and $elem['items']['places']['id'] )
+    if ( $elem['items']['places'] )
     {
       foreach ($elem['items']['places'] as $place)
       {
-        $req_places = $db_handle->prepare('REPLACE INTO places ( id, level, name, townId, townName, x, y )
-                                           SELECT ?, ?, ?, ?, ?, ?, ?
-                                           WHERE NOT EXISTS (SELECT 1 FROM places WHERE id = '.$place['id'].')');
+        if ( !is_null( $place['id']) and !is_null( $place['townId'] ) ) // to exclude portals
+        {
+          $sql_places = 'INSERT OR REPLACE INTO pcs ( id, level, name, wounds, guildId, guildName, x, y )
+                                           VALUES (
+                                                   COALESCE(?, (SELECT id        FROM places WHERE id = '.$places['id'].')),
+                                                   COALESCE(?, (SELECT level     FROM places WHERE id = '.$places['id'].')),
+                                                   COALESCE(?, (SELECT name      FROM places WHERE id = '.$places['id'].')),
+                                                   COALESCE(?, (SELECT townId    FROM places WHERE id = '.$places['id'].')),
+                                                   COALESCE(?, (SELECT townName  FROM places WHERE id = '.$places['id'].')),
+                                                   COALESCE(?, (SELECT x         FROM places WHERE id = '.$places['id'].')),
+                                                   COALESCE(?, (SELECT y         FROM places WHERE id = '.$places['id'].'))
+                                                  )';
 
-        $req_places->execute(array($place['id'], $place['level'], $place['name'], $place['townId'], $place['townName'], $elem['x'], $elem['y']));
+          $req_places = $db_handle->prepare($sql_pcs);
+          $req_places->execute(array($place['id'], $place['level'], $place['name'], $place['townId'], $place['townName'], $elem['x'], $elem['y']));
+        }
       }
     }
 
