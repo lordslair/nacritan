@@ -33,7 +33,7 @@ if ( $arr )
     {
       foreach ($elem['items']['places'] as $place)
       {
-        if ( !is_null( $place['id']) and !is_null( $place['townId'] ) ) // to exclude portals
+        if ( !is_null($place['id']) )
         {
           $sql_places = 'INSERT OR REPLACE INTO places ( id, level, name, townId, townName, x, y )
                                            VALUES (
