@@ -19,7 +19,7 @@ if ( $arr )
 
   $sql_jsons = 'REPLACE INTO jsons ( id, data) VALUES (?, ?)';
   $req_jsons = $db_handle->prepare($sql_jsons);
-  $req_jsons->execute(array(time(), $json));
+  $req_jsons->execute(array($json));
 
   foreach ($arr as $elem)
   {
