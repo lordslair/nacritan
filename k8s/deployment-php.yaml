@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nacridian-backend
+  labels:
+    app: php
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: php
+    spec:
+
+      initContainers:
+      - name: nacridian-backend-init
+        image: busybox
+        volumeMounts:
+        - name: code
+          mountPath: /code
+        command: ["/bin/sh"]
+        args: [
+         "-c",
+         "(
+              wget   https://github.com/lordslair/nacridan-retriever-backend/archive/master.zip -O /tmp/nrb.zip &&
+              unzip  /tmp/nrb.zip -d /tmp/ &&
+              cp -a  /tmp/nacridan-retriever-backend-master/code/* /code/ &&
+              rm -rf /tmp/nacridan-retriever-backend-master &&
+              rm -rf /tmp/nrb.zip
+          ) || echo 1"
+        ]
+
+      containers:
+      - name: nacridian-backend
+        image: alpine
+        command: ["/code/entrypoint.sh"]
+        volumeMounts:
+        - mountPath: /code
+          name: code
+      restartPolicy: Always
+
+      volumes:
+      - name: code
+        persistentVolumeClaim:
+          claimName: nacridian-backend-code-php
