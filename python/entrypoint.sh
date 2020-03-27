@@ -11,7 +11,6 @@ apk update --no-cache \
                                     libc-dev \
                                     tzdata \
     && pip3 --no-cache-dir install -U Flask \
-                                      mysql-connector-python \
     && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
     && apk del .build-deps
 
