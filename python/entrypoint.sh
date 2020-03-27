@@ -17,4 +17,4 @@ apk update --no-cache \
 
 echo "`date +"%F %X"` Build done ..."
 
-exec /code/gobland-it-discord
+exec flask run
