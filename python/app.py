@@ -1,4 +1,8 @@
+import os
+
+from datetime import datetime
 from flask import Flask
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -7,4 +11,4 @@ def index():
 
 @app.route('/greet')
 def say_hello():
-  return 'Hello from Server'
+  return '[' + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + '] Hello from Server: ' + os.uname().nodename
