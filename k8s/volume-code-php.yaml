@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: nacridian-backend-code-php
 spec:
-  storageClassName: cinder-classic
+  storageClassName: csi-cinder-classic
   accessModes:
   - ReadWriteOnce
   resources:
