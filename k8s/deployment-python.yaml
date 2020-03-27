@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nacritan-python
+  labels:
+    tier: nacritan-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python
+      tier: nacritan-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: python
+        tier: nacritan-backend
+    spec:
+
+      initContainers:
+      - name: nacritan-python-init
+        image: busybox
+        volumeMounts:
+        - name: code
+          mountPath: /code
+        command: ["/bin/sh"]
+        args: [
+         "-c",
+         "(
+              wget   https://github.com/lordslair/nacridan-retriever-backend/archive/master.zip -O /tmp/nrb.zip &&
+              unzip  /tmp/nrb.zip -d /tmp/ &&
+              cp -a  /tmp/nacridan-retriever-backend-master/python/* /code/ &&
+              rm -rf /tmp/nacridan-retriever-backend-master &&
+              rm -rf /tmp/nrb.zip
+          ) || echo 1"
+        ]
+
+      containers:
+      - name: nacritan-python
+        image: alpine
+        command: ["/code/entrypoint.sh"]
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          value: YYYYY
+        - name: FLASK_ENV
+          value: 'development'
+        - name: FLASK_APP
+          value: '/code/app.py'
+        - name: FLASK_HOST
+          value: '0.0.0.0'
+        - name: FLASK_PORT
+          value: '5000'
+        volumeMounts:
+        - mountPath: /code
+          name: code
+      restartPolicy: Always
+
+      volumes:
+      - name: code
+        persistentVolumeClaim:
+          claimName: nacritan-code-python
