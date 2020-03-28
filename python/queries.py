@@ -60,3 +60,9 @@ def query_tiles_zone(x,y,n):
     result = query_fetchall(SQL,(x,y,x,y,n),True)
     if result:
         return result
+
+def query_tiles_all():
+    SQL     = """SELECT * FROM tiles WHERE ?"""
+    result = query_fetchall(SQL,(1,),True)
+    if result:
+        return result
