@@ -42,8 +42,8 @@ spec:
         image: alpine
         command: ["/code/entrypoint.sh"]
         env:
-        - name: MARIADB_ROOT_PASSWORD
-          value: YYYYY
+        - name: SQLITE_DB_NAME
+          value: /code/nacridan.db
         - name: FLASK_ENV
           value: 'development'
         - name: FLASK_APP
