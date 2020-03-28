@@ -9,12 +9,12 @@ from functions import dict_factory
 db_name   = os.environ['SQLITE_DB_NAME']
 
 # Meta Query using one parameter, and a fetchone()
-def query_fetchone(SQL,param,dict):
+def query_fetchone(SQL,params,dict):
     db             = sqlite3.connect(db_name, timeout=20)
     if dict: db.row_factory = dict_factory # To force output as a dict
     cursor         = db.cursor()
 
-    cursor.execute(SQL, (param,))
+    cursor.execute(SQL, params)
     result = cursor.fetchone()
 
     cursor.close()
@@ -27,12 +27,12 @@ def query_fetchone(SQL,param,dict):
         return None
 
 # Meta Query using one parameter, and a fetchall()
-def query_fetchone(SQL,param,dict):
+def query_fetchone(SQL,params,dict):
     db             = sqlite3.connect(db_name, timeout=20)
     if dict: db.row_factory = dict_factory # To force output as a dict
     cursor         = db.cursor()
 
-    cursor.execute(SQL, (param,))
+    cursor.execute(SQL, params)
     result = cursor.fetchall()
 
     cursor.close()
@@ -46,7 +46,7 @@ def query_fetchone(SQL,param,dict):
 
 def query_pcs_id(pcs_id):
     SQL     = """SELECT * FROM pcs WHERE id = ?"""
-    result = query_fetchone(SQL,pcs_id,True)
+    result = query_fetchone(SQL,(pcs_id,),True)
     if result:
         return result
 
