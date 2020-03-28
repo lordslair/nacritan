@@ -1,11 +1,8 @@
 # -*- coding: utf8 -*-
 
-import os
-
-from queries import *
-
-from datetime import datetime
-from flask import Flask
+from queries   import *
+from functions import funct_greet
+from flask     import Flask
 
 app = Flask(__name__)
 
@@ -15,7 +12,7 @@ def index():
 
 @app.route('/greet')
 def say_hello():
-  return '[' + datetime.now().strftime("%d/%m/%Y %H:%M:%S") + '] Hello from Server: ' + os.uname().nodename
+  return funct_greet()
 
 @app.route('/pcs/id/<int:pcs_id>')
 def send_pcs_info(pcs_id):
