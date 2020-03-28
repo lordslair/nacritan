@@ -8,32 +8,23 @@ from functions import dict_factory
 
 db_name   = os.environ['SQLITE_DB_NAME']
 
-# Meta Query using one parameter, and a fetchone()
-def query_fetchone(SQL,params,dict):
+# Meta Query
+#          ┌ string - SQL query
+#          |    ┌ array - params for placeholders
+#          |    |    ┌ boolean - for row_factory
+#          |    |    |       ┌ boolean - to switch between fetchone/fetchall
+#          v    v    v       v
+def query(SQL,params,dict,fetchall):
     db             = sqlite3.connect(db_name, timeout=20)
     if dict: db.row_factory = dict_factory # To force output as a dict
     cursor         = db.cursor()
 
     cursor.execute(SQL, params)
-    result = cursor.fetchone()
 
-    cursor.close()
-    db.close()
-    if result:
-        # We dump result into a JSON
-        # ensure_ascii is used to avoid unicode and have UTF-8
-        return json.dumps(result, ensure_ascii=False)
+    if fetchall:
+        result = cursor.fetchall()
     else:
-        return None
-
-# Meta Query using one parameter, and a fetchall()
-def query_fetchone(SQL,params,dict):
-    db             = sqlite3.connect(db_name, timeout=20)
-    if dict: db.row_factory = dict_factory # To force output as a dict
-    cursor         = db.cursor()
-
-    cursor.execute(SQL, params)
-    result = cursor.fetchall()
+        result = cursor.fetchone()
 
     cursor.close()
     db.close()
@@ -46,7 +37,7 @@ def query_fetchone(SQL,params,dict):
 
 def query_pcs_id(pcs_id):
     SQL     = """SELECT * FROM pcs WHERE id = ?"""
-    result = query_fetchone(SQL,(pcs_id,),True)
+    result = query(SQL,(pcs_id,),True,False)
     if result:
         return result
 
@@ -55,14 +46,14 @@ def query_tiles_zone(x,y,n):
                  FROM tiles \
                  WHERE ( \
                            ABS(? - tiles.x) + ABS(? - tiles.y) \
-                         + ABS((- ? - ?) - (- tiles.x - tiles.y))
+                           + ABS((- ? - ?) - (- tiles.x - tiles.y))
                        ) / 2 <= ?"""
-    result = query_fetchall(SQL,(x,y,x,y,n),True)
+    result = query(SQL,(x,y,x,y,n),True,True)
     if result:
         return result
 
 def query_tiles_all():
     SQL     = """SELECT * FROM tiles WHERE ?"""
-    result = query_fetchall(SQL,(1,),True)
+    result = query(SQL,(1,),True,True)
     if result:
         return result
