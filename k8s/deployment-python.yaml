@@ -43,7 +43,7 @@ spec:
         command: ["/code/entrypoint.sh"]
         env:
         - name: SQLITE_DB_NAME
-          value: /code/nacridan.db
+          value: /db/nacridan.db
         - name: FLASK_ENV
           value: 'development'
         - name: FLASK_APP
@@ -55,9 +55,14 @@ spec:
         volumeMounts:
         - mountPath: /code
           name: code
+        - mountPath: /db
+          name: db
       restartPolicy: Always
 
       volumes:
       - name: code
         persistentVolumeClaim:
           claimName: nacritan-code-python
+      - name: db
+        persistentVolumeClaim:
+          claimName: nacritan-sqlite-db
