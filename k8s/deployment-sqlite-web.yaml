@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nacritan-sqlite-web
+  labels:
+    tier: nacritan-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python
+      tier: nacritan-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: python
+        tier: nacritan-backend
+    spec:
+
+      initContainers:
+      - name: nacritan-sqlite-web-init
+        image: busybox
+        volumeMounts:
+        - mountPath: /db
+          name: db
+        command: ["/bin/sh"]
+        args: [
+         "-c",
+         "(
+              wget   https://github.com/lordslair/nacridan-retriever-backend/archive/master.zip -O /tmp/nrb.zip &&
+              unzip  /tmp/nrb.zip -d /tmp/ &&
+              cp -a  /tmp/nacridan-retriever-backend-master/sqlite-web/* /db/ &&
+              rm -rf /tmp/nacridan-retriever-backend-master &&
+              rm -rf /tmp/nrb.zip
+          ) || echo 1"
+        ]
+
+      containers:
+      - name: nacritan-sqlite-web
+        image: alpine
+        command: ["/db/entrypoint.sh"]
+        env:
+        - name: SQLITE_DB_NAME
+          value: /db/nacridan.db
+        - name: SQLITE_WEB_PASSWORD
+          value: XXXXX
+        - name: FLASK_HOST
+          value: '0.0.0.0'
+        - name: FLASK_PORT
+          value: '5001'
+        volumeMounts:
+        - mountPath: /code
+          name: code
+        - mountPath: /db
+          name: db
+      restartPolicy: Always
+
+      volumes:
+      - name: code
+        persistentVolumeClaim:
+          claimName: nacritan-code-python
+      - name: db
+        persistentVolumeClaim:
+          claimName: nacritan-sqlite-db
