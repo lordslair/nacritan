@@ -18,5 +18,5 @@ echo "`date +"%F %X"` Build done ..."
 
 exec sqlite_web --host=$FLASK_HOST \
                 --port=$FLASK_PORT \
-                --password=$SQLITE_WEB_PASSWORD \
+                --password \
                 $SQLITE_DB_NAME
