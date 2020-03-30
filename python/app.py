@@ -1,10 +1,12 @@
 # -*- coding: utf8 -*-
 
-from queries   import *
-from functions import funct_greet
-from flask     import Flask
+from queries    import *
+from functions  import funct_greet
+from flask      import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def index():
