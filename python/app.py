@@ -39,3 +39,14 @@ def send_tiles_info(x,y,n):
     return result
   else:
     return '{}'
+
+@app.route('/foo', methods=['POST'])
+def foo():
+  if request.json:
+    result = query_insert_fulljson(request.json)
+    if result:
+      return '{"Info": "Job done (' + str(result) + ')"}'
+    else:
+      return '{"Info": "Job failed"}'
+  else:
+    return '{"Info": "Not an JSON document"}'

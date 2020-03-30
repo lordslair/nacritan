@@ -71,3 +71,9 @@ def query_tiles_all():
     result = query(SQL,(1,),True,True)
     if result:
         return result
+
+def query_insert_fulljson(rawjson):
+    SQL     = """INSERT INTO jsons(data) VALUES (?)"""
+    result  = query_insert(SQL, (json.dumps(rawjson),))
+    if result:
+        return result
