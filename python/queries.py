@@ -35,6 +35,20 @@ def query(SQL,params,dict,fetchall):
     else:
         return None
 
+# Meta Query (for INSERT)
+#                 ┌ string - SQL query
+#                 |    ┌ array - params for placeholders
+#                 v    v
+def query_insert(SQL,params):
+    db             = sqlite3.connect(db_name, timeout=20)
+    cursor         = db.cursor()
+
+    cursor.execute(SQL, params)
+
+    db.commit()
+    db.close()
+    return cursor.lastrowid
+
 def query_pcs_id(pcs_id):
     SQL     = """SELECT * FROM pcs WHERE id = ?"""
     result = query(SQL,(pcs_id,),True,False)
