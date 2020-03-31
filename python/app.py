@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 
 from queries        import *
-from functions      import funct_greet
+from functions      import funct_infos
 from variables      import tokens
 
 from flask          import Flask, request, g
