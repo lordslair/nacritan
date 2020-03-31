@@ -52,6 +52,8 @@ spec:
           value: '0.0.0.0'
         - name: FLASK_PORT
           value: '5000'
+        - name: AUTH_TOKENS
+          value: "{'TOKEN1': 'user1','TOKEN2': 'user2'}"
         volumeMounts:
         - mountPath: /code
           name: code
