@@ -1,12 +1,27 @@
 # -*- coding: utf8 -*-
 
-from queries    import *
-from functions  import funct_greet
-from flask      import Flask, request
-from flask_cors import CORS
+from queries        import *
+from functions      import funct_greet
+from variables      import tokens
+
+from flask          import Flask, g
+from flask_cors     import CORS
+from flask_httpauth import HTTPTokenAuth
 
 app = Flask(__name__)
 CORS(app)
+
+@auth.verify_token
+def verify_token(token):
+    if token in tokens:
+        g.current_user = tokens[token]
+        return True
+    return False
+
+@app.route('/auth/login')
+@auth.login_required
+def user():
+    return "Hello, %s!" % g.current_user
 
 @app.route('/')
 def index():

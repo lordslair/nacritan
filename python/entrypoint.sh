@@ -12,6 +12,7 @@ apk update --no-cache \
                                     tzdata \
     && pip3 --no-cache-dir install -U Flask \
                                       Flask-cors \
+                                      Flask-httpauth \
     && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
     && apk del .build-deps
 
