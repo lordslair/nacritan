@@ -11,6 +11,8 @@ from flask_httpauth import HTTPTokenAuth
 app = Flask(__name__)
 CORS(app)
 
+auth = HTTPTokenAuth('Basic')
+
 @auth.verify_token
 def verify_token(token):
     if token in tokens:
