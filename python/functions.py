@@ -12,8 +12,8 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-def funct_greet():
+def funct_infos(current_user):
     date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     host = os.uname().nodename
-    json = '{"host": "' + host + '", "date": "' + date + '"}'
+    json = '{"host": "' + host + '", "date": "' + date + '", "user": "' + current_user + '"}'
     return json

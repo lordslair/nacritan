@@ -20,18 +20,10 @@ def verify_token(token):
         return True
     return False
 
-@app.route('/auth/login')
+@app.route('/infos')
 @auth.login_required
-def user():
-    return "Hello, %s!" % g.current_user
-
-@app.route('/')
-def index():
-  return 'Server Works!'
-
-@app.route('/greet')
-def say_hello():
-  return funct_greet()
+def send_infos():
+  return funct_infos(g.current_user)
 
 @app.route('/pcs/id/<int:pcs_id>')
 @auth.login_required
