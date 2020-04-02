@@ -154,11 +154,9 @@ def query_insert_resources(rawjson,user):
                                    (SELECT 1 FROM resources WHERE x = ? AND y = ? )"""
                 query_insert(SQL_resources, (resource['level'], resource['name'], elem['x'], elem['y'], user, elem['x'], elem['y']))
         else:
-        # Here we are on coords (x,y) without a ressource, we should do nothing
-        # BUT, maybe there was a ressource before, and vanished. We need to DELETE the row in that case
-            SQL_resources = """DELETE FROM resources
-                               WHERE EXISTS
-                               (SELECT 1 FROM resources WHERE x = ? AND y = ? )"""
+            # Here we are on coords (x,y) without a ressource, we should do nothing
+            # BUT, maybe there was a ressource before, and vanished. We need to DELETE the row in that case
+            SQL_resources = """DELETE FROM resources WHERE x = ? AND y = ?"""
             query_insert(SQL_resources, (elem['x'], elem['y']))
 
 def query_insert_objects(rawjson,user):
