@@ -92,6 +92,8 @@ def query_insert_places(rawjson,user):
             for place in elem['items']['places']:
                 if place['id']:
                     id = place['id']
+                    if place['name'] == 'Portail': place['townId']   = None # Portals have no townId
+                    if place['name'] == 'Portail': place['townName'] = None # Portals have no townName
                     SQL_places = ("""INSERT OR REPLACE INTO places ( id, level, name, townId, townName, x, y, user )
                                            VALUES (
                                                    COALESCE(?, (SELECT id        FROM places WHERE id = {} )),
