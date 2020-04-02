@@ -85,3 +85,22 @@ def query_insert_tiles(rawjson,user):
                    (SELECT 1 FROM tiles WHERE x = ? AND y = ? )"""
     for elem in rawjson:
         query_insert(SQL_tiles, (elem['x'],elem['y'],elem['type'],user,elem['x'],elem['y']))
+
+def query_insert_places(rawjson,user):
+    for elem in rawjson:
+        if elem['items']['places']:
+            for place in elem['items']['places']:
+                if place['id']:
+                    id = place['id']
+                    SQL_places = ("""INSERT OR REPLACE INTO places ( id, level, name, townId, townName, x, y, user )
+                                           VALUES (
+                                                   COALESCE(?, (SELECT id        FROM places WHERE id = {} )),
+                                                   COALESCE(?, (SELECT level     FROM places WHERE id = {} )),
+                                                   COALESCE(?, (SELECT name      FROM places WHERE id = {} )),
+                                                   COALESCE(?, (SELECT townId    FROM places WHERE id = {} )),
+                                                   COALESCE(?, (SELECT townName  FROM places WHERE id = {} )),
+                                                   COALESCE(?, (SELECT x         FROM places WHERE id = {} )),
+                                                   COALESCE(?, (SELECT y         FROM places WHERE id = {} )),
+                                                   COALESCE(?, (SELECT user      FROM places WHERE id = {} ))
+                                                  )""").format(id, id, id, id, id, id, id, id)
+                    query_insert(SQL_places, (place['id'], place['level'], place['name'], place['townId'], place['townName'], elem['x'], elem['y'], user))
