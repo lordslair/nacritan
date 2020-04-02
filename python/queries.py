@@ -106,3 +106,22 @@ def query_insert_places(rawjson,user):
                                                    COALESCE(?, (SELECT user      FROM places WHERE id = {} ))
                                                   )""").format(id, id, id, id, id, id, id, id)
                     query_insert(SQL_places, (place['id'], place['level'], place['name'], place['townId'], place['townName'], elem['x'], elem['y'], user))
+
+def query_insert_pcs(rawjson,user):
+    for elem in rawjson:
+        if elem['items']['pcs']:
+            for pc in elem['items']['pcs']:
+                    id = pc['id']
+                    SQL_pcs = ("""INSERT OR REPLACE INTO pcs ( id, level, name, wounds, guildId, guildName, x, y, user )
+                                        VALUES (
+                                                COALESCE(?, (SELECT id        FROM pcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT level     FROM pcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT name      FROM pcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT wounds    FROM pcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT guildId   FROM pcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT guildName FROM pcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT x         FROM pcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT y         FROM pcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT user      FROM pcs WHERE id = {} ))
+                                               )""").format(id, id, id, id, id, id, id, id, id)
+                    query_insert(SQL_pcs, (pc['id'], pc['level'], pc['name'], pc['wounds'], pc['guildId'], pc['guildName'], elem['x'], elem['y'], user))
