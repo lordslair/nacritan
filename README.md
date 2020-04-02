@@ -24,6 +24,7 @@ Actually, it works this way :
 └── python                            |  
     ├── app.py                        |  Flask main app
     ├── functions.py                  |  library to handle common f()
+    ├── variables.py                  |  library to handle global variables
     └── queries.py                    |  library to handle SQL layer
 ```
 
@@ -88,7 +89,7 @@ nacritan-code-python     Bound    pvc-[...]-da539ff1fafe   1Gi        [...]
 nacritan-sqlite-db       Bound    pvc-[...]-418ac586b236   1Gi        [...]
 ```
 
-- The 4 services : php, mariadb, nginx & loadbalancer
+- The 3 services : python, sqlite-web & loadbalancer
 
 ```
 $ kubectl get services
