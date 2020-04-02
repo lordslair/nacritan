@@ -142,3 +142,21 @@ def query_insert_npcs(rawjson,user):
                                                 COALESCE(?, (SELECT user      FROM pcs WHERE id = {} ))
                                                )""").format(id, id, id, id, id, id, id)
                     query_insert(SQL_npcs, (pc['id'], pc['level'], pc['name'], pc['wounds'], elem['x'], elem['y'], user))
+
+def query_insert_resources(rawjson,user):
+    for elem in rawjson:
+        if elem['items']['resources']:
+            # Here we have a ressource, we may need to INSERT in DB if it doesn't exist on (x,y) coords
+            for resource in elem['items']['resources']:
+                SQL_resources = """REPLACE INTO resources ( level, name, x, y, user )
+                                   SELECT ?, ?, ?, ?, ?
+                                   WHERE NOT EXISTS
+                                   (SELECT 1 FROM resources WHERE x = ? AND y = ? )"""
+                query_insert(SQL_resources, (resource['level'], resource['name'], elem['x'], elem['y'], user, elem['x'], elem['y']))
+        else:
+        # Here we are on coords (x,y) without a ressource, we should do nothing
+        # BUT, maybe there was a ressource before, and vanished. We need to DELETE the row in that case
+            SQL_resources = """DELETE FROM resources
+                               WHERE EXISTS
+                               (SELECT 1 FROM resources WHERE x = ? AND y = ? )"""
+            query_insert(SQL_resources, (elem['x'], elem['y']))
