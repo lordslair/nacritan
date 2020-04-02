@@ -160,3 +160,19 @@ def query_insert_resources(rawjson,user):
                                WHERE EXISTS
                                (SELECT 1 FROM resources WHERE x = ? AND y = ? )"""
             query_insert(SQL_resources, (elem['x'], elem['y']))
+
+def query_insert_objects(rawjson,user):
+    for elem in rawjson:
+        if elem['items']['objects']:
+            # Here we have an object, we may need to INSERT in DB if it doesn't exist on (x,y) coords
+            for object in elem['items']['objects']:
+                SQL_objects = """REPLACE INTO objects ( id, name, x, y, user )
+                                 SELECT ?, ?, ?, ?, ?
+                                 WHERE NOT EXISTS
+                                 (SELECT 1 FROM objects WHERE id = ? )"""
+                query_insert(SQL_objects, (object['id'], object['name'], elem['x'], elem['y'], user, object['id']))
+        else:
+            # Here we are on coords (x,y) without a object, we should do nothing
+            # BUT, maybe there was a object before, and vanished. We need to DELETE the row in that case
+            SQL_objects = """DELETE FROM objects WHERE x = ? AND y = ?"""
+            query_insert(SQL_objects, (elem['x'], elem['y']))
