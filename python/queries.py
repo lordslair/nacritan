@@ -89,6 +89,7 @@ def query_insert_tiles(rawjson,user):
 def query_insert_places(rawjson,user):
     for elem in rawjson:
         if elem['items']['places']:
+            # Here we have a place, we may need to INSERT in DB if it doesn't exist on (x,y) coords
             for place in elem['items']['places']:
                 if place['id']:
                     id = place['id']
@@ -106,6 +107,11 @@ def query_insert_places(rawjson,user):
                                                    COALESCE(?, (SELECT user      FROM places WHERE id = {} ))
                                                   )""").format(id, id, id, id, id, id, id, id)
                     query_insert(SQL_places, (place['id'], place['level'], place['name'], place['townId'], place['townName'], elem['x'], elem['y'], user))
+        else:
+            # Here we are on coords (x,y) without a place, we should do nothing
+            # BUT, maybe there was a place before, and vanished. We need to DELETE the row in that case
+            SQL_places = """DELETE FROM places WHERE x = ? AND y = ?"""
+            query_insert(SQL_places, (elem['x'], elem['y']))
 
 def query_insert_pcs(rawjson,user):
     for elem in rawjson:
