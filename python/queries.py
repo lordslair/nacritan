@@ -77,3 +77,11 @@ def query_insert_fulljson(rawjson):
     result  = query_insert(SQL, (json.dumps(rawjson),))
     if result:
         return result
+
+def query_insert_tiles(rawjson,user):
+    SQL_tiles = """REPLACE INTO tiles ( x, y, type, user )
+                   SELECT ?, ?, ?, ?
+                   WHERE NOT EXISTS
+                   (SELECT 1 FROM tiles WHERE x = ? AND y = ? )"""
+    for elem in rawjson:
+        query_insert(SQL_tiles, (elem['x'],elem['y'],elem['type'],user,elem['x'],elem['y']))
