@@ -1,34 +1,34 @@
 CREATE TABLE IF NOT EXISTS pcs (
-id        INT  NOT NULL PRIMARY KEY,
-level     INT  NOT NULL,
-name      TEXT NOT NULL,
-wounds    TEXT NULL,
-guildId   INT  NULL,
-guildName TEXT NULL,
-x         INT NOT NULL,
-y         INT NOT NULL,
-user      TEXT NOT NULL,
+id        INT      NOT NULL PRIMARY KEY,
+level     INT      NOT NULL,
+name      TEXT     NOT NULL,
+wounds    TEXT     NULL,
+guildId   INT      NULL,
+guildName TEXT     NULL,
+x         INT      NOT NULL,
+y         INT      NOT NULL,
+user      TEXT     NOT NULL,
 date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS npcs (
-id        INT  NOT NULL PRIMARY KEY,
-level     INT  NOT NULL,
-name      TEXT NOT NULL,
-wounds    TEXT NULL,
-x         INT NOT NULL,
-y         INT NOT NULL,
-user      TEXT NOT NULL,
+id        INT      NOT NULL PRIMARY KEY,
+level     INT      NOT NULL,
+name      TEXT     NOT NULL,
+wounds    TEXT     NULL,
+x         INT      NOT NULL,
+y         INT      NOT NULL,
+user      TEXT     NOT NULL,
 date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS places (
-id        INT  NOT NULL PRIMARY KEY,
-level     INT  NOT NULL,
-name      TEXT NOT NULL,
-townId    INT  NULL,
-townName  TEXT NULL,
-x         INT NOT NULL,
-y         INT NOT NULL,
-user      TEXT NOT NULL,
+id        INT      NOT NULL PRIMARY KEY,
+level     INT      NOT NULL,
+name      TEXT     NOT NULL,
+townId    INT      NULL,
+townName  TEXT     NULL,
+x         INT      NOT NULL,
+y         INT      NOT NULL,
+user      TEXT     NOT NULL,
 date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS resources (
@@ -58,5 +58,5 @@ date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS jsons (
 id        INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
-data      TEXT NOT NULL,
+data      TEXT     NOT NULL,
 date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
