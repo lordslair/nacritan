@@ -139,15 +139,15 @@ def query_insert_npcs(rawjson,user):
                     id = npc['id']
                     SQL_npcs = ("""INSERT OR REPLACE INTO npcs ( id, level, name, wounds, x, y, user )
                                         VALUES (
-                                                COALESCE(?, (SELECT id        FROM pcs WHERE id = {} )),
-                                                COALESCE(?, (SELECT level     FROM pcs WHERE id = {} )),
-                                                COALESCE(?, (SELECT name      FROM pcs WHERE id = {} )),
-                                                COALESCE(?, (SELECT wounds    FROM pcs WHERE id = {} )),
-                                                COALESCE(?, (SELECT x         FROM pcs WHERE id = {} )),
-                                                COALESCE(?, (SELECT y         FROM pcs WHERE id = {} )),
-                                                COALESCE(?, (SELECT user      FROM pcs WHERE id = {} ))
+                                                COALESCE(?, (SELECT id        FROM npcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT level     FROM npcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT name      FROM npcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT wounds    FROM npcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT x         FROM npcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT y         FROM npcs WHERE id = {} )),
+                                                COALESCE(?, (SELECT user      FROM npcs WHERE id = {} ))
                                                )""").format(id, id, id, id, id, id, id)
-                    query_insert(SQL_npcs, (pc['id'], pc['level'], pc['name'], pc['wounds'], elem['x'], elem['y'], user))
+                    query_insert(SQL_npcs, (npc['id'], npc['level'], npc['name'], npc['wounds'], elem['x'], elem['y'], user))
 
 def query_insert_resources(rawjson,user):
     for elem in rawjson:
