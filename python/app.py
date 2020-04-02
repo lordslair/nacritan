@@ -52,12 +52,25 @@ def send_tiles_info(x,y,n):
   else:
     return '{}'
 
-@app.route('/foo', methods=['POST'])
+@app.route('/view', methods=['POST'])
 @auth.login_required
-def foo():
+def post_view():
   if request.json:
     result = query_insert_fulljson(request.json)
     if result:
+      # Full JSON SUCCESSFULLY inserted
+      # Now time to insert tiles
+      query_insert_tiles(request.json,g.current_user)
+      # Now time to insert places
+      query_insert_places(request.json,g.current_user)
+      # Now time to insert pcs
+      query_insert_pcs(request.json,g.current_user)
+      # Now time to insert npcs
+      query_insert_npcs(request.json,g.current_user)
+      # Now time to insert resources
+      query_insert_resources(request.json,g.current_user)
+      # Now time to insert objects
+      query_insert_objects(request.json,g.current_user)
       return '{"Info": "Job done (' + str(result) + ')"}'
     else:
       return '{"Info": "Job failed"}'
