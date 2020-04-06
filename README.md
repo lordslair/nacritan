@@ -22,6 +22,8 @@ Actually, it works this way :
 │   ├── service-*.yaml                |  Services deployment files
 │   └── volume-*.yaml                 |  Volumes deployment files
 └── python                            |  
+    ├── data
+    │  └── initDB.SQL                 |  Init SQL script for the DB
     ├── app.py                        |  Flask main app
     ├── functions.py                  |  library to handle common f()
     ├── variables.py                  |  library to handle global variables
