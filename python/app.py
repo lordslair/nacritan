@@ -76,3 +76,15 @@ def post_view():
       return '{"Info": "Job failed"}'
   else:
     return '{"Info": "Not an JSON document"}'
+
+@app.route('/pc/<int:pc_id>', methods=['POST'])
+@auth.login_required
+def post_pc(pc_id):
+  if request.json:
+    result = query_insert_pc(request.json,g.current_user)
+    if result:
+      return '{"Info": "Job done"}'
+    else:
+      return '{"Info": "Job failed"}'
+  else:
+    return '{"Info": "Not an JSON document"}'

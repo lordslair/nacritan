@@ -180,3 +180,25 @@ def query_insert_objects(rawjson,user):
             # BUT, maybe there was a object before, and vanished. We need to DELETE the row in that case
             SQL_objects = """DELETE FROM objects WHERE x = ? AND y = ?"""
             query_insert(SQL_objects, (elem['x'], elem['y']))
+
+def query_insert_pc(rawjson,user):
+    if rawjson['id']:
+        if rawjson['race'] is None: rawjson['race'] = '' # Dirty fix waiting for race to be populated
+        # INSERT OR REPLACE INTO pcsInfos
+        SQL_pcinfos = """INSERT OR REPLACE INTO pcsInfos ( id, name, race, img, dla, pas, pos, xp, xpMax, user )
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+        result_pcinfos =  query_insert(SQL_pcinfos,
+                                       (rawjson['id'], rawjson['name'], rawjson['race'], rawjson['img'], rawjson['dla'],
+                                        rawjson['pas'], rawjson['pos'], rawjson['xp'], rawjson['xpMax'], user))
+
+        if rawjson['caracs']:
+            # INSERT OR REPLACE INTO pcsCaracs
+            SQL_pccaracs = """INSERT OR REPLACE INTO pcsCaracs ( id, name, pv, pvMax, attM, defM, degM, arm, mmM, user )
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            result_pccaracs = query_insert(SQL_pccaracs,
+                                      (rawjson['id'], rawjson['name'], rawjson['caracs']['pv'], rawjson['caracs']['pvMax'],
+                                       rawjson['caracs']['attM'], rawjson['caracs']['defM'], rawjson['caracs']['degM'],
+                                       rawjson['caracs']['arm'], rawjson['caracs']['mmM'], user))
+
+        if result_pcinfos and result_pccaracs:
+            return 'OK'

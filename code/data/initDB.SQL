@@ -10,6 +10,32 @@ y         INT      NOT NULL,
 user      TEXT     NOT NULL,
 date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
+CREATE TABLE IF NOT EXISTS pcsInfos (
+id        INT      NOT NULL PRIMARY KEY,
+name      TEXT     NOT NULL,
+race      TEXT     NOT NULL,
+img       TEXT     NULL,
+dla       DATETIME NOT NULL,
+pas       INT      NOT NULL,
+pos       INT      NOT NULL,
+xp        INT      NOT NULL,
+xpMax     INT      NOT NULL,
+user      TEXT     NOT NULL,
+date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
+
+CREATE TABLE IF NOT EXISTS pcsCaracs (
+id        INT      NOT NULL PRIMARY KEY,
+name      TEXT     NOT NULL,
+pv        INT      NOT NULL,
+pvMax     INT      NOT NULL,
+attM      INT      NOT NULL,
+defM      INT      NOT NULL,
+degM      INT      NOT NULL,
+arm       INT      NOT NULL,
+mmM       INT      NOT NULL,
+user      TEXT     NOT NULL,
+date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
+
 CREATE TABLE IF NOT EXISTS npcs (
 id        INT      NOT NULL PRIMARY KEY,
 level     INT      NOT NULL,
