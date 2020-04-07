@@ -60,7 +60,7 @@ def query_pcs_id(pcs_id):
         return result
 
 def query_tiles_zone(x,y,n):
-    SQL     = """SELECT * \
+    SQL     = """SELECT id,x,y,type \
                  FROM tiles \
                  WHERE ( \
                            ABS(? - tiles.x) + ABS(? - tiles.y) \
