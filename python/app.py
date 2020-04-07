@@ -88,3 +88,12 @@ def post_pc(pc_id):
       return '{"Info": "Job failed"}'
   else:
     return '{"Info": "Not an JSON document"}'
+
+@app.route('/gdc', methods=['GET'])
+@auth.login_required
+def get_gdc():
+    result = query_select_gdc(g.current_user)
+    if result:
+      return result
+    else:
+      return '{"Info": "Job failed"}'

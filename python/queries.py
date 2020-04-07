@@ -206,3 +206,19 @@ def query_insert_pc(rawjson,user):
 
         if result_pcinfos and result_pccaracs:
             return 'OK'
+
+def query_select_gdc(user):
+    SQL_gdc_user_guildId    = """SELECT guildId
+                                 FROM pcs
+                                 WHERE name = ?
+                                 LIMIT 1"""
+    result_gdc_user_guildId = query(SQL_gdc_user_guildId, (user,), False, False)
+    guildId                 = result_gdc_user_guildId[0]
+
+    SQL_gdc                 = """SELECT id,name,x,y,level,wounds,guildId,guildName
+                                 FROM pcs
+                                 WHERE guildId = ?"""
+    result_gdc              = query(SQL_gdc, (guildId,), True, True)
+
+    if result_gdc:
+        return result_gdc
