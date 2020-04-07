@@ -29,9 +29,13 @@ def query(SQL,params,dict,fetchall):
     cursor.close()
     db.close()
     if result:
-        # We dump result into a JSON
-        # ensure_ascii is used to avoid unicode and have UTF-8
-        return json.dumps(result, ensure_ascii=False)
+        if dict:
+            # We dump result into a JSON
+            # ensure_ascii is used to avoid unicode and have UTF-8
+            return json.dumps(result, ensure_ascii=False)
+        else:
+            # We simply return values
+            return result
     else:
         return None
 
