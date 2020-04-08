@@ -53,12 +53,6 @@ def query_insert(SQL,params):
     db.close()
     return cursor.lastrowid
 
-def query_pcs_id(pcs_id):
-    SQL     = """SELECT * FROM pcs WHERE id = ?"""
-    result = query(SQL,(pcs_id,),True,False)
-    if result:
-        return result
-
 def query_tiles_zone(x,y,n):
     SQL     = """SELECT id,x,y,type \
                  FROM tiles \
