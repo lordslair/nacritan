@@ -4,7 +4,7 @@ from queries        import *
 from functions      import funct_infos
 from variables      import tokens
 
-from flask          import Flask, request, g
+from flask          import Flask, request, g, abort
 from flask_cors     import CORS
 from flask_httpauth import HTTPTokenAuth
 
@@ -22,8 +22,11 @@ def verify_token(token):
 
 @app.route('/infos', methods=['GET'])
 @auth.login_required
-def send_infos():
-  return funct_infos(g.current_user)
+def get_infos():
+  if request.remote_addr == "127.0.0.1":
+    return funct_infos(g.current_user)
+  else:
+    abort(403)
 
 @app.route('/pcs/id/<int:pcs_id>')
 @auth.login_required
