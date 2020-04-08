@@ -20,7 +20,7 @@ def verify_token(token):
         return True
     return False
 
-@app.route('/infos')
+@app.route('/infos', methods=['GET'])
 @auth.login_required
 def send_infos():
   return funct_infos(g.current_user)
