@@ -23,7 +23,11 @@ Actually, it works this way :
 │   └── volume-*.yaml                 |  Volumes deployment files
 └── python                            |  
     ├── data
-    │  └── initDB.SQL                 |  Init SQL script for the DB
+    │   └── initDB.SQL                |  Init SQL script for the DB
+    ├── tests
+    │   ├── test_00_vars.py           |  Tests for token presence
+    │   ├── test_01_auth.py           |  Tests for token auth by routes
+    │   └── test_02_data.py           |  Tests for data returned by routes
     ├── app.py                        |  Flask main app
     ├── functions.py                  |  library to handle common f()
     ├── variables.py                  |  library to handle global variables
@@ -40,6 +44,7 @@ I used mainy :
 * [kubernetes/kubernetes][kubernetes] to make everything smooth
 * [Alpine][alpine] - probably the best/lighter base container to work with
 * [pallets/flask][flask] - Python micro framework for building API
+* [pytest-dev/pytest][pytest] - Python test framework
 
 And of course GitHub to store all these shenanigans.
 
@@ -117,3 +122,4 @@ nacritan-sqlite-web          ClusterIP      10.3.98.218    <none>       5001/TCP
    [docker]: <https://github.com/docker/docker-ce>
    [alpine]: <https://github.com/alpinelinux>
    [flask]: <https://github.com/pallets/flask>
+   [pytst]: <https://github.com/pytest-dev/pytest>
