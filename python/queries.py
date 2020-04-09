@@ -207,12 +207,21 @@ def query_select_gdc(user):
                                  WHERE name = ?
                                  LIMIT 1"""
     result_gdc_user_guildId = query(SQL_gdc_user_guildId, (user,), False, False)
-    guildId                 = result_gdc_user_guildId[0]
 
-    SQL_gdc                 = """SELECT id,name,x,y,level,wounds,guildId,guildName
-                                 FROM pcs
-                                 WHERE guildId = ?"""
-    result_gdc              = query(SQL_gdc, (guildId,), True, True)
+    if result_gdc_user_guildId:
 
-    if result_gdc:
-        return result_gdc
+        guildId    = result_gdc_user_guildId[0]
+        SQL_gdc    = """SELECT pcsInfos.id,pcsInfos.name,race,img,dla,pas,pos,xp,xpMax,
+                        pv,pvMax,attM,defM,degM,arm,mmM
+                        FROM pcsInfos
+                        INNER JOIN pcsCaracs on pcsInfos.id = pcsCaracs.id
+                        INNER JOIN pcs on pcsInfos.id = pcs.id
+                        WHERE pcs.guildId = ?"""
+        result_gdc = query(SQL_gdc, (guildId,), True, True)
+
+        if result_gdc:
+            return result_gdc
+        else:
+            return '{"Info": "guildId (' + str(guildId) + ') received, but no SQL data retrieved"}'
+    else:
+        return '{"Info": "No guildId returned"}'
