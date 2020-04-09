@@ -9,10 +9,13 @@ apk update --no-cache \
                                     libffi-dev \
                                     gcc \
                                     libc-dev \
+                                    jpeg-dev \
+                                    zlib-dev \
                                     tzdata \
     && pip3 --no-cache-dir install -U Flask \
                                       Flask-cors \
                                       Flask-httpauth \
+                                      Pillow-PIL \
     && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
     && apk del .build-deps
 

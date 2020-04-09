@@ -91,3 +91,9 @@ def get_gdc():
       return result
     else:
       return '{"Info": "Job failed"}'
+
+@app.route('/worldmap')
+def get_worldmap ():
+    path = '/var/tmp/worldmap.png'
+    funct_worldmap(1000, 500, path)
+    return send_file(path, as_attachment=False)
