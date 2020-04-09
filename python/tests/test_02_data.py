@@ -26,3 +26,13 @@ def test_nacritan_data_tiles():
     assert json.loads(response.data.decode('utf8'))
     # Tonak, has coords { "x": 553, "y": 317 }
     assert b'"x": 553, "y": 317' in response.data
+
+def test_nacritan_data_worldmap():
+    route    = '/worldmap'
+    worldmap = '/tmp/test_nacritan_data_worldmap.png'
+    response = app.test_client().open(route, headers=header_ok)
+    open(worldmap, 'wb').write(response.data)
+
+    from PIL import Image
+    assert Image.open(worldmap)
+    os.remove(worldmap)
