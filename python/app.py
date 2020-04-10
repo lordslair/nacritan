@@ -94,6 +94,8 @@ def get_gdc():
 
 @app.route('/worldmap')
 def get_worldmap ():
+    from flask     import send_file
+    from functions import funct_worldmap
     path = '/var/tmp/worldmap.png'
     funct_worldmap(1000, 500, path)
     return send_file(path, as_attachment=False)
