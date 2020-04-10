@@ -17,8 +17,10 @@ apk update --no-cache \
                                       Flask-cors \
                                       Flask-httpauth \
                                       Pillow-PIL \
+                                      pytest \
     && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
-    && apk del .build-deps
+    && apk del .build-deps \
+    && pytest /code/tests
 
 echo "`date +"%F %X"` Build done ..."
 
