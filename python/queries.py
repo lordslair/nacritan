@@ -183,8 +183,12 @@ def query_insert_pc(rawjson,user):
     if rawjson['id']:
         if rawjson['race'] is None: rawjson['race'] = '' # Dirty fix waiting for race to be populated
         # INSERT OR REPLACE INTO pcsInfos
-        SQL_pcinfos = """INSERT OR REPLACE INTO pcsInfos ( id, name, race, img, dla, pas, pos, xp, xpMax, user )
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+        SQL_pcinfos = ("""INSERT OR REPLACE INTO pcsInfos ( id, name, race, img, dla, pas, pos, xp, xpMax, user )
+                         VALUES (
+                                 ?, ?,
+                                 COALESCE(?, (SELECT race FROM pcsInfos WHERE id = {} )),
+                                 ?, ?, ?, ?, ?, ?, ?
+                                )""").format(rawjson['id'])
         result_pcinfos =  query_insert(SQL_pcinfos,
                                        (rawjson['id'], rawjson['name'], rawjson['race'], rawjson['img'], rawjson['dla'],
                                         rawjson['pas'], rawjson['pos'], rawjson['xp'], rawjson['xpMax'], user))
