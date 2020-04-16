@@ -97,7 +97,6 @@ def get_gdc():
 def post_gdc():
     if request.json:
       result = query_insert_gdc(request.json,g.current_user)
-
     if result is 0:
       return '{"Info": "Job done (' + str(result) + ')"}'
     else:

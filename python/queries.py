@@ -215,7 +215,7 @@ def query_select_gdc(user):
     if result_gdc_user_guildId:
 
         guildId    = result_gdc_user_guildId[0]
-        SQL_gdc    = """SELECT pcsInfos.id,pcsInfos.name,race,img,dla,pas,pos,xp,xpMax,
+        SQL_gdc    = """SELECT pcsInfos.id,pcsInfos.name,race,img,dla,pas,pos,xp,xpMax,pc,
                         pv,pvMax,attM,defM,degM,arm,mmM
                         FROM pcsInfos
                         INNER JOIN pcsCaracs on pcsInfos.id = pcsCaracs.id
@@ -233,11 +233,16 @@ def query_select_gdc(user):
 def query_insert_gdc(rawjson,user):
     count_elem   = 0
     SQL_gdc_race = """UPDATE pcsInfos
-                      SET race = ?
-                      WHERE id = ?"""
+                      SET    race = ?
+                      WHERE  id   = ?"""
+    SQL_gdc_pc   = """UPDATE pcsCaracs
+                      SET    pc   = ?
+                      WHERE  id   = ?"""
     for elem in rawjson:
         count_elem += 1
         if elem['id']:
             result_gdc_race = query_insert(SQL_gdc_race, (elem['race'], elem['id']))
-            if result_gdc_race >= 0: count_elem -= 1
+            if elem['pc']:
+                result_gdc_pc = query_insert(SQL_gdc_pc, (elem['pc'], elem['id']))
+        if result_gdc_race >= 0 and result_gdc_pc >= 0: count_elem -= 1
     return count_elem

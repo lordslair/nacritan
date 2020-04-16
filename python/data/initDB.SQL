@@ -33,6 +33,7 @@ defM      INT      NOT NULL,
 degM      INT      NOT NULL,
 arm       INT      NOT NULL,
 mmM       INT      NOT NULL,
+pc        INT      NULL,
 user      TEXT     NOT NULL,
 date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
