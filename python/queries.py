@@ -225,3 +225,15 @@ def query_select_gdc(user):
             return '{"Info": "guildId (' + str(guildId) + ') received, but no SQL data retrieved"}'
     else:
         return '{"Info": "No guildId returned"}'
+
+def query_insert_gdc(rawjson,user):
+    count_elem   = 0
+    SQL_gdc_race = """UPDATE pcsInfos
+                      SET race = ?
+                      WHERE id = ?"""
+    for elem in rawjson:
+        count_elem += 1
+        if elem['id']:
+            result_gdc_race = query_insert(SQL_gdc_race, (elem['race'], elem['id']))
+            if result_gdc_race >= 0: count_elem -= 1
+    return count_elem

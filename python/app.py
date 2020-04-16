@@ -92,6 +92,17 @@ def get_gdc():
     else:
       return '{"Info": "Job failed"}'
 
+@app.route('/gdc', methods=['POST'])
+@auth.login_required
+def post_gdc():
+    if request.json:
+      result = query_insert_gdc(request.json,g.current_user)
+
+    if result is 0:
+      return '{"Info": "Job done (' + str(result) + ')"}'
+    else:
+      return '{"Info": "Job failed (' + str(result) + ')"}'
+
 @app.route('/worldmap')
 def get_worldmap ():
     from flask     import send_file
