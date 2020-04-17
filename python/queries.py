@@ -195,8 +195,12 @@ def query_insert_pc(rawjson,user):
 
         if rawjson['caracs']:
             # INSERT OR REPLACE INTO pcsCaracs
-            SQL_pccaracs = """INSERT OR REPLACE INTO pcsCaracs ( id, name, pv, pvMax, attM, defM, degM, arm, mmM, user )
-                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            SQL_pccaracs = ("""INSERT OR REPLACE INTO pcsCaracs ( id, name, pv, pvMax, attM, defM, degM, arm, mmM, pc, user )
+                               VALUES (
+                                       ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                                       COALESCE(?, (SELECT pc FROM pcsCaracs WHERE id = {} )),
+                                       ?
+                                      )""").format(rawjson['id'])
             result_pccaracs = query_insert(SQL_pccaracs,
                                       (rawjson['id'], rawjson['name'], rawjson['caracs']['pv'], rawjson['caracs']['pvMax'],
                                        rawjson['caracs']['attM'], rawjson['caracs']['defM'], rawjson['caracs']['degM'],
