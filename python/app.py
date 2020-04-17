@@ -109,3 +109,12 @@ def get_worldmap ():
     path = '/var/tmp/worldmap.png'
     funct_worldmap(1000, 500, path)
     return send_file(path, as_attachment=False)
+
+@app.route('/minimap/<int:x>/<int:y>/<int:n>')
+@auth.login_required
+def get_minimap(x,y,n):
+  result = query_tiles_zone(x,y,n) # result will be a JSON
+  if result:
+    return result
+  else:
+    return '{}'
