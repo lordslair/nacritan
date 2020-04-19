@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nacritan-backend-nginx
+  labels:
+    tier: nacritan-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+      tier: nacritan-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nginx
+        tier: nacritan-backend
+    spec:
+
+      containers:
+      - name: nacritan-backend-nginx
+        image: nginx:stable-alpine
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/conf.d
+        - name: www
+          mountPath: /var/www/certbot
+        - name: certs
+          mountPath: /etc/letsencrypt
+      - name: nacritan-backend-nginx-certbot
+        image: certbot/certbot
+        command: ["/bin/sh"]
+        args: ["-c", "while :; do sleep 60; done;"]
+        volumeMounts:
+         - name: www
+           mountPath: /var/www/certbot
+         - name: certs
+           mountPath: /etc/letsencrypt
+      restartPolicy: Always
+
+      volumes:
+      - name: config
+        configMap:
+          name: nacritan-backend-nginx
+          items:
+          - key: config
+            path: site.conf
+      - name: certs
+        persistentVolumeClaim:
+          claimName: nacritan-backend-certbot-certs
+      - name: www
+        persistentVolumeClaim:
+          claimName: nacritan-backend-certbot-www

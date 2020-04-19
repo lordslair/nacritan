@@ -1,20 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nacritan-lb
+  name: nacritan-backend-nginx
   labels:
     tier: nacritan-backend
 spec:
-  type: LoadBalancer
   selector:
     app: nginx
     tier: nacritan-backend
   ports:
-  - port: 80
-    targetPort: 80
-    protocol: TCP
+  - protocol: TCP
+    port: 80
     name: http
-  - port: 443
-    targetPort: 443
-    protocol: TCP
+  - protocol: TCP
+    port: 443
     name: https
