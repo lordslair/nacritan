@@ -8,14 +8,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: python
+      app: sqlite-web
       tier: nacritan-backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: python
+        app: sqlite-web
         tier: nacritan-backend
     spec:
 
