@@ -24,4 +24,7 @@ apk update --no-cache \
 
 echo "`date +"%F %X"` Build done ..."
 
-exec flask run --host=$FLASK_HOST --port=$FLASK_PORT
+exec flask run --host=$FLASK_HOST \
+               --port=$FLASK_PORT \
+               $FLASK_DEBUG \
+               $FLASK_THREAD
