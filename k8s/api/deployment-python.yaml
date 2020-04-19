@@ -43,7 +43,7 @@ spec:
         command: ["/code/entrypoint.sh"]
         env:
         - name: FLASK_DEBUG
-          value: '--debug'
+          value: '--debugger'
         - name: FLASK_THREAD
           value: '--with-threads'
         - name: SQLITE_DB_NAME
