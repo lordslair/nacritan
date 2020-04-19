@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nacritan-sqlite-web
+  name: nacritan-backend-sqlite-web
   labels:
     tier: nacritan-backend
 spec:
