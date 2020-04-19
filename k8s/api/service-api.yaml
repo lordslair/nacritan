@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nacritan-python
+  name: nacritan-backend-api
   labels:
     tier: nacritan-backend
 spec:
   selector:
-    app: python
+    app: api
     tier: nacritan-backend
   ports:
   - protocol: TCP

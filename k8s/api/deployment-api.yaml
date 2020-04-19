@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nacritan-python
+  name: nacritan-backend-api
   labels:
     tier: nacritan-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: python
+      app: api
       tier: nacritan-backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: python
+        app: api
         tier: nacritan-backend
     spec:
 
       initContainers:
-      - name: nacritan-python-init
+      - name: nacritan-backend-api-init
         image: busybox
         volumeMounts:
         - name: code
@@ -38,7 +38,7 @@ spec:
         ]
 
       containers:
-      - name: nacritan-python
+      - name: nacritan-backend-api
         image: alpine
         command: ["/code/entrypoint.sh"]
         env:
@@ -68,7 +68,7 @@ spec:
       volumes:
       - name: code
         persistentVolumeClaim:
-          claimName: nacritan-code-python
+          claimName: nacritan-backend-code-api
       - name: db
         persistentVolumeClaim:
           claimName: nacritan-sqlite-db
