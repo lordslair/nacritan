@@ -204,7 +204,7 @@ def query_insert_pc(rawjson,user):
             result_pccaracs = query_insert(SQL_pccaracs,
                                       (rawjson['id'], rawjson['name'], rawjson['caracs']['pv'], rawjson['caracs']['pvMax'],
                                        rawjson['caracs']['attM'], rawjson['caracs']['defM'], rawjson['caracs']['degM'],
-                                       rawjson['caracs']['arm'], rawjson['caracs']['mmM'], user))
+                                       rawjson['caracs']['arm'], rawjson['caracs']['mmM'],rawjson['caracs']['pc'], user))
 
         if result_pcinfos and result_pccaracs:
             return 'OK'
