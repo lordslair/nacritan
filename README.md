@@ -1,6 +1,6 @@
 # nacridan-retriever-backend, the project :
 
-This project is mainly a backend for a Tactical Interface (IT) for the game Nacridan.  
+This project is a backend for a Tactical Interface (IT) in the game Nacridan.  
 Its purpose is to parse data received from JS user scripts.  
 It's done by a Python backend to query a SQLite DB.  
 And a Python-Flask API, to return JSON if requested.  
@@ -10,8 +10,9 @@ These containers are powered up by Kubernetes.
 
 Actually, it works this way :
 
- - (nacritan-python)     runs the Flask app
- - (nacritan-sqlite-web) runs the SQLite WebUI
+ - (nacritan-backend-nginx)      runs the proxy to serve the URLs, and SSL certs
+ - (nacritan-backend-api)        runs the Flask app
+ - (nacritan-backend-sqlite-web) runs the SQLite WebUI
 
 ### Which script does what ?
 
@@ -40,6 +41,7 @@ I used mainy :
 
 * Python v3
 * SQLite v3
+* nginx
 * [docker/docker-ce][docker] to make it easy to maintain
 * [kubernetes/kubernetes][kubernetes] to make everything smooth
 * [Alpine][alpine] - probably the best/lighter base container to work with
@@ -53,7 +55,11 @@ And of course GitHub to store all these shenanigans.
 ```
       +-----------------------------------------------+
       |                  LoadBalancer                 |
-      +-+-------------------------------------------+-+
+      +-----------------------+-----------------------+
+                              |
+                     +--------v--------+
+        +----------->+      nginx      +<-----------+
+        |            +-----------------+            |
         |                                           |
 +-------v-------+                           +-------v-------+
 |  Flask:5000   |                           |  Flask:5001   |
@@ -78,32 +84,36 @@ $ kubectl apply -f *
 ```
 
 This will create :
-- The 2 pods : python, sqlite-web
+- The 3 pods : nginx, api, sqlite-web
 
 ```
 $ kubectl get pods
-NAME                                     READY   STATUS    RESTARTS   AGE
-nacritan-python-767d8cd58d-qnrxx         1/1     Running   0          22h
-nacritan-sqlite-web-58d569d6c5-ncpch     1/1     Running   0          21h
+NAME                                          READY   STATUS    RESTARTS   AGE
+nacritan-backend-api-65b887758f-259gd         1/1     Running   0          17m
+nacritan-backend-nginx-8f5cf6c7d-twjzw        2/2     Running   0          5h
+nacritan-backend-sqlite-web-6f5567f64f-bk8mk  1/1     Running   0          8m42s
 ```
 
-- The 2 volumes : code-python, sqlite-db
+- The 4 volumes : api, sqlite-db, certbot-certs, certbot-www
 
 ```
 $ kubectl get pvc
-NAME                     STATUS   VOLUME                   CAPACITY   [...]
-nacritan-code-python     Bound    pvc-[...]-da539ff1fafe   1Gi        [...]
-nacritan-sqlite-db       Bound    pvc-[...]-418ac586b236   1Gi        [...]
+NAME                            STATUS  VOLUME                   CAPACITY  [...]
+nacritan-backend-code-api       Bound   pvc-[...]-da539ff1fafe   1Gi       [...]
+nacritan-sqlite-db              Bound   pvc-[...]-418ac586b236   1Gi       [...]
+nacritan-backend-certbot-certs  Bound   pvc-[...]-5312025190d9   1Gi       [...]
+nacritan-backend-certbot-www    Bound   pvc-[...]-d6ab9d74cf8b   1Gi       [...]
 ```
 
-- The 3 services : python, sqlite-web & loadbalancer
+- The 5 services : nginx, api, sqlite-web & loadbalancer
 
 ```
 $ kubectl get services
-NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP  PORT(S)     
+NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP  PORT(S)
 nacritan-lb                  LoadBalancer   10.3.40.58     [...]        80:30985/TCP,8080:30619/TCP
-nacritan-python              ClusterIP      10.3.51.95     <none>       5000/TCP    
-nacritan-sqlite-web          ClusterIP      10.3.98.218    <none>       5001/TCP         
+nacritan-backend-api         ClusterIP      10.3.138.0     <none>       5000/TCP
+nacritan-backend-nginx       ClusterIP      10.3.202.163   <none>       80/TCP,443/TCP
+nacritan-backend-sqlite-web  ClusterIP      10.3.89.229    <none>       5001/TCP
 ```
 
 #### Disclaimer/Reminder
