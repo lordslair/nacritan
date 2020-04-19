@@ -15,7 +15,7 @@ data:
       }
 
       location / {
-        proxy_pass http://nacritan-python:5000;
+        proxy_pass http://<SERVICE>:5000;
         proxy_http_version      1.1;
       }
     }
@@ -38,7 +38,7 @@ data:
       ssl_certificate_key /etc/letsencrypt/live/<URL>/privkey.pem;
 
       location / {
-        proxy_pass http://nacritan-python:5000;
+        proxy_pass http://<SERVICE>:5000;
         proxy_http_version      1.1;
       }
     }
