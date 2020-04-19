@@ -51,16 +51,11 @@ spec:
         - name: FLASK_PORT
           value: '5001'
         volumeMounts:
-        - mountPath: /code
-          name: code
         - mountPath: /db
           name: db
       restartPolicy: Always
 
       volumes:
-      - name: code
-        persistentVolumeClaim:
-          claimName: nacritan-code-python
       - name: db
         persistentVolumeClaim:
           claimName: nacritan-sqlite-db
