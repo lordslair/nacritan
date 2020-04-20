@@ -212,7 +212,7 @@ def query_insert_objects(rawjson,user):
 def query_insert_pc(rawjson,user):
     if rawjson['id']:
         if rawjson['race'] is None: rawjson['race'] = '' # Dirty fix waiting for race to be populated
-        # INSERT OR REPLACE INTO pcsInfos
+        # INSERT OR UPDATE INTO pcsInfos
         SQL_pcinfos = """INSERT INTO pcsInfos ( id, name, race, img, dla, pas, pos, xp, xpMax, user )
                          VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
                          ON CONFLICT(id)
@@ -238,7 +238,7 @@ def query_insert_pc(rawjson,user):
                                         rawjson['xpMax'], user))
 
         if rawjson['caracs']:
-            # INSERT OR REPLACE INTO pcsCaracs
+            # INSERT OR UPDATE INTO pcsCaracs
             SQL_pccaracs = """INSERT INTO pcsCaracs ( id, name, pv, pvMax, attM, defM, degM, arm, mmM, user )
                               VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
                               ON CONFLICT(id)
@@ -250,8 +250,8 @@ def query_insert_pc(rawjson,user):
                                             arm   = ?,
                                             mmM   = ?,
                                             user  = ?,
-                                            date  = datetime('now');
-                              """
+                                            date  = datetime('now');"""
+
             result_pccaracs = query_insert(SQL_pccaracs,
                                            (rawjson['id'],
                                             rawjson['name'],
