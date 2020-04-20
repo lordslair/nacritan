@@ -225,16 +225,30 @@ def query_insert_pc(rawjson,user):
 
         if rawjson['caracs']:
             # INSERT OR REPLACE INTO pcsCaracs
-            SQL_pccaracs = ("""INSERT OR REPLACE INTO pcsCaracs ( id, name, pv, pvMax, attM, defM, degM, arm, mmM, pc, user )
-                               VALUES (
-                                       ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                                       COALESCE(?, (SELECT pc FROM pcsCaracs WHERE id = {} )),
-                                       ?
-                                      )""").format(rawjson['id'])
+            SQL_pccaracs = """INSERT INTO pcsCaracs ( id, name, pv, pvMax, attM, defM, degM, arm, mmM, user )
+                              VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )
+                              ON CONFLICT(id)
+                              DO UPDATE SET pv    = ?,
+                                            pvMax = ?,
+                                            attM  = ?,
+                                            defM  = ?,
+                                            degM  = ?,
+                                            arm   = ?,
+                                            mmM   = ?,
+                                            user  = ?,
+                                            date  = datetime('now');
+                              """
             result_pccaracs = query_insert(SQL_pccaracs,
-                                      (rawjson['id'], rawjson['name'], rawjson['caracs']['pv'], rawjson['caracs']['pvMax'],
-                                       rawjson['caracs']['attM'], rawjson['caracs']['defM'], rawjson['caracs']['degM'],
-                                       rawjson['caracs']['arm'], rawjson['caracs']['mmM'],rawjson['caracs']['pc'], user))
+                                           (rawjson['id'],
+                                            rawjson['name'],
+                                            rawjson['caracs']['pv'],   rawjson['caracs']['pvMax'],
+                                            rawjson['caracs']['attM'], rawjson['caracs']['defM'],
+                                            rawjson['caracs']['degM'], rawjson['caracs']['arm'],
+                                            rawjson['caracs']['mmM'],  user,
+                                            rawjson['caracs']['pv'],   rawjson['caracs']['pvMax'],
+                                            rawjson['caracs']['attM'], rawjson['caracs']['defM'],
+                                            rawjson['caracs']['degM'], rawjson['caracs']['arm'],
+                                            rawjson['caracs']['mmM'],  user))
 
         if result_pcinfos and result_pccaracs:
             return 'OK'
