@@ -113,7 +113,7 @@ def get_worldmap ():
 @app.route('/minimap/<int:x>/<int:y>/<int:n>')
 @auth.login_required
 def get_minimap(x,y,n):
-  result = query_tiles_zone(x,y,n) # result will be a JSON
+  result = query_tiles_minimap(x,y,n) # result will be a JSON
   if result:
     return result
   else:

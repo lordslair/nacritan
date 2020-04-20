@@ -64,6 +64,36 @@ def query_tiles_zone(x,y,n):
     if result:
         return result
 
+def query_tiles_minimap(x,y,n):
+    SQL     = """SELECT id,x,y,type \
+                 FROM tiles \
+                 WHERE ( \
+                           ABS(? - tiles.x) + ABS(? - tiles.y) \
+                           + ABS((- ? - ?) - (- tiles.x - tiles.y))
+                       ) / 2 <= ?"""
+    result = query(SQL,(x,y,x,y,n),True,True)
+    if result:
+        result_json = json.loads(result)
+        for elem in result_json:
+            SQL_tile_res    = """SELECT name FROM resources WHERE ( x = ? AND y = ? )"""
+            result_tile_res = query(SQL_tile_res,(elem['x'],elem['y'],),False,False)
+
+            SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? )"""
+            result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],),False,False)
+
+            SQL_tile_pla    = """SELECT name FROM places WHERE ( x = ? AND y = ? )"""
+            result_tile_pla = query(SQL_tile_pla,(elem['x'],elem['y'],),False,False)
+
+            if result_tile_res:
+                elem.update({'on_tile': {'resource': result_tile_res[0]}})
+            elif result_tile_pcs:
+                elem.update({'on_tile': {'pc': result_tile_pcs[0]}})
+            elif result_tile_pla:
+                elem.update({'on_tile': {'place': result_tile_pla[0]}})
+            else:
+                elem.update({'on_tile': {}})
+        return json.dumps(result_json)
+
 def query_tiles_all():
     SQL     = """SELECT * FROM tiles WHERE ?"""
     result = query(SQL,(1,),True,True)
