@@ -65,7 +65,7 @@ def query_tiles_zone(x,y,n):
         return result
 
 def query_tiles_minimap(x,y,n):
-    SQL     = """SELECT id,x,y,type \
+    SQL     = """SELECT x,y,type \
                  FROM tiles \
                  WHERE ( \
                            ABS(? - tiles.x) + ABS(? - tiles.y) \
