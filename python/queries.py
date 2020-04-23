@@ -176,6 +176,11 @@ def query_insert_npcs(rawjson,user):
                                                 COALESCE(?, (SELECT user      FROM npcs WHERE id = {} ))
                                                )""").format(id, id, id, id, id, id, id)
                     query_insert(SQL_npcs, (npc['id'], npc['level'], npc['name'], npc['wounds'], elem['x'], elem['y'], user))
+        else:
+            # Here we are on coords (x,y) without a npcs, we should do nothing
+            # BUT, maybe there was a npc before, and vanished, died, moved. We need to DELETE the row in that case
+            SQL_npcs = """DELETE FROM npcs WHERE x = ? AND y = ?"""
+            query_insert(SQL_npcs, (elem['x'], elem['y']))
 
 def query_insert_resources(rawjson,user):
     for elem in rawjson:
