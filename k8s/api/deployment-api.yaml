@@ -45,7 +45,7 @@ spec:
         - name: FLASK_DEBUG
           value: '--debugger'
         - name: FLASK_THREAD
-          value: '--with-threads'
+          value: '--without-threads'
         - name: SQLITE_DB_NAME
           value: /db/nacridan.db
         - name: FLASK_ENV
