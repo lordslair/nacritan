@@ -6,9 +6,13 @@ metadata:
     tier: nacritan-backend
 data:
   config : |
+
+    log_format nacritan '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent $ssl_protocol "$http_Authorization"';
+
     server {
       listen      80;
       server_name <URL>;
+      access_log  /var/log/nginx/access.log nacritan;
 
       location /.well-known/acme-challenge/ {
           root /var/www/certbot;
@@ -25,6 +29,7 @@ data:
     server {
       listen 443 ssl;
       server_name <URL>;
+      access_log  /var/log/nginx/access.log nacritan;
 
       add_header          Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
 
