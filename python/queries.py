@@ -47,11 +47,15 @@ def query_insert(SQL,params):
     db             = sqlite3.connect(db_name, timeout=20)
     cursor         = db.cursor()
 
-    cursor.execute(SQL, params)
-
-    db.commit()
-    db.close()
-    return cursor.lastrowid
+    try:
+        cursor.execute(SQL, params)
+        db.commit()
+        db.close()
+        return cursor.lastrowid
+    except sqlite3.Error as e:
+        import sys
+        sys.stderr.write("SQLite INSERT Error %s:" % e.args[0])
+        return None
 
 def query_tiles_zone(x,y,n):
     SQL     = """SELECT id,x,y,type \
