@@ -85,8 +85,14 @@ def query_tiles_minimap(x,y,n,user):
 
         result_json = json.loads(result)
         for elem in result_json:
-            SQL_tile_res    = """SELECT name FROM resources WHERE ( x = ? AND y = ? )"""
-            result_tile_res = query(SQL_tile_res,(elem['x'],elem['y'],),False,False)
+            SQL_tile_res    = """SELECT name
+                                 FROM resources
+                                 WHERE ( x = ? AND y = ? )
+                                 UNION ALL
+                                 SELECT name
+                                 FROM npcs
+                                 WHERE ( x = ? AND y = ? AND name = 'Kradjeck ferreux' )"""
+            result_tile_res = query(SQL_tile_res,(elem['x'],elem['y'],elem['x'],elem['y']),False,False)
 
             if result_gdc_user_guildId:
                 guildId    = result_gdc_user_guildId[0]
