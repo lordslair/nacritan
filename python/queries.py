@@ -68,7 +68,7 @@ def query_tiles_zone(x,y,n):
     if result:
         return result
 
-def query_tiles_minimap(x,y,n):
+def query_tiles_minimap(x,y,n,user):
     SQL     = """SELECT x,y,type \
                  FROM tiles \
                  WHERE ( \
@@ -77,13 +77,28 @@ def query_tiles_minimap(x,y,n):
                        ) / 2 <= ?"""
     result = query(SQL,(x,y,x,y,n),True,True)
     if result:
+        SQL_gdc_user_guildId    = """SELECT guildId
+                                     FROM pcs
+                                     WHERE name = ?
+                                     LIMIT 1"""
+        result_gdc_user_guildId = query(SQL_gdc_user_guildId, (user,), False, False)
+
         result_json = json.loads(result)
         for elem in result_json:
             SQL_tile_res    = """SELECT name FROM resources WHERE ( x = ? AND y = ? )"""
             result_tile_res = query(SQL_tile_res,(elem['x'],elem['y'],),False,False)
 
-            SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? )"""
-            result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],),False,False)
+            if result_gdc_user_guildId:
+                guildId    = result_gdc_user_guildId[0]
+
+                SQL_tile_gdc    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? AND guildID = ? )"""
+                result_tile_gdc = query(SQL_tile_pcs,(elem['x'],elem['y'],guildId),False,False)
+
+                SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? AND NOT guildID = ? )"""
+                result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],guildId),False,False)
+            else:
+                SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? )"""
+                result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],),False,False)
 
             SQL_tile_pla    = """SELECT name FROM places WHERE ( x = ? AND y = ? )"""
             result_tile_pla = query(SQL_tile_pla,(elem['x'],elem['y'],),False,False)
@@ -94,6 +109,8 @@ def query_tiles_minimap(x,y,n):
                 elem.update({'on_tile': {'pc': result_tile_pcs[0]}})
             elif result_tile_pla:
                 elem.update({'on_tile': {'place': result_tile_pla[0]}})
+            elif result_tile_gdc:
+                elem.update({'on_tile': {'gdc': result_tile_gdc[0]}})
             else:
                 elem.update({'on_tile': {}})
         return json.dumps(result_json)
