@@ -9,9 +9,7 @@ from functions import dict_factory
 from variables import REDIS_PORT,
                       REDIS_HOST,
                       REDIS_DB_NAME
-
-
-db_name   = os.environ['SQLITE_DB_NAME']
+from variables import SQLITE_DB_NAME
 
 r       = redis.StrictRedis(host    = REDIS_HOST,
                             port    = REDIS_PORT,
@@ -25,7 +23,7 @@ r       = redis.StrictRedis(host    = REDIS_HOST,
 #          |    |    |       ┌ boolean - to switch between fetchone/fetchall
 #          v    v    v       v
 def query(SQL,params,dict,fetchall):
-    db             = sqlite3.connect(db_name, timeout=20)
+    db             = sqlite3.connect(SQLITE_DB_NAME, timeout=20)
     if dict: db.row_factory = dict_factory # To force output as a dict
     cursor         = db.cursor()
 
@@ -54,7 +52,7 @@ def query(SQL,params,dict,fetchall):
 #                 |    ┌ array - params for placeholders
 #                 v    v
 def query_insert(SQL,params):
-    db             = sqlite3.connect(db_name, timeout=20)
+    db             = sqlite3.connect(SQLITE_DB_NAME, timeout=20)
     cursor         = db.cursor()
 
     try:

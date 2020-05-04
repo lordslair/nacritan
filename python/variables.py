@@ -10,6 +10,9 @@ terrains_rgb = {"Plaine":         ( 51, 204, 51 ),
                 "Terre battue":   (153, 102, 51 ),
                 "Plaine fleurie": ( 51, 153, 51 )}
 
+#SQLite variables
+SQLITE_DB_NAME   = os.environ['SQLITE_DB_NAME']
+
 # Redis variables
 REDIS_HOST    = os.environ['REDIS_HOST']
 REDIS_PORT    = 6379
