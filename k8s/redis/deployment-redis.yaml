@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nacritan-backend-redis
+  labels:
+    tier: nacritan-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      tier: nacritan-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis
+        tier: nacritan-backend
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: nacritan-backend-redis
+        image: redis:alpine

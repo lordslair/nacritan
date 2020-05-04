@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nacritan-backend-redis-svc
+  labels:
+    tier: nacritan-backend
+spec:
+  selector:
+    app: redis
+    tier: nacritan-backend
+  ports:
+  - protocol: TCP
+    port: 6379
+    name: redis
