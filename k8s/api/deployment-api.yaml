@@ -58,6 +58,8 @@ spec:
           value: '5000'
         - name: AUTH_TOKENS
           value: "{'TOKEN1': 'user1','TOKEN2': 'user2'}"
+        - name: REDIS_HOST
+          value: 'nacritan-backend-redis-svc'
         volumeMounts:
         - mountPath: /code
           name: code

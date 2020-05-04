@@ -3,10 +3,20 @@
 import sqlite3
 import os
 import json
+import redis
 
 from functions import dict_factory
+from variables import REDIS_PORT,
+                      REDIS_HOST,
+                      REDIS_DB_NAME
+
 
 db_name   = os.environ['SQLITE_DB_NAME']
+
+r       = redis.StrictRedis(host    = REDIS_HOST,
+                            port    = REDIS_PORT,
+                            db      = REDIS_DB_NAME,
+                            charset = 'utf-8')
 
 # Meta Query
 #          ┌ string - SQL query
@@ -64,66 +74,90 @@ def query_tiles_zone(x,y,n):
                            ABS(? - tiles.x) + ABS(? - tiles.y) \
                            + ABS((- ? - ?) - (- tiles.x - tiles.y))
                        ) / 2 <= ?"""
-    result = query(SQL,(x,y,x,y,n),True,True)
+    key = 'tiles_zone/{}/{}/{}'.format(x,y,n)
+
+    if r.exists(key) > 0:
+        result = r.get(key)
+    else:
+        result = query(SQL,(x,y,x,y,n),True,True)
+        try:
+            r.set(key, result, ex = 1800)
+        except redis.exceptions.ConnectionError as r_con_error:
+            print('Redis connection error')
+
     if result:
         return result
 
 def query_tiles_minimap(x,y,n,user):
-    SQL     = """SELECT x,y,type \
-                 FROM tiles \
-                 WHERE ( \
-                           ABS(? - tiles.x) + ABS(? - tiles.y) \
-                           + ABS((- ? - ?) - (- tiles.x - tiles.y))
-                       ) / 2 <= ?"""
-    result = query(SQL,(x,y,x,y,n),True,True)
+    result = query_tiles_zone(x,y,n)
+    key    = 'tiles_minimap/{}/{}/{}'.format(x,y,n)
     if result:
-        SQL_gdc_user_guildId    = """SELECT guildId
-                                     FROM pcs
-                                     WHERE name = ?
-                                     LIMIT 1"""
-        result_gdc_user_guildId = query(SQL_gdc_user_guildId, (user,), False, False)
+        if r.exists(key) > 0:
+            result_json = json.loads(r.get(key))
+        else:
 
-        result_json = json.loads(result)
-        for elem in result_json:
-            SQL_tile_res    = """SELECT name
-                                 FROM resources
-                                 WHERE ( x = ? AND y = ? )
-                                 UNION ALL
-                                 SELECT name
-                                 FROM npcs
-                                 WHERE ( x = ? AND y = ? AND name = 'Kradjeck ferreux' )"""
-            result_tile_res = query(SQL_tile_res,(elem['x'],elem['y'],elem['x'],elem['y']),False,False)
+            SQL_gdc_user_guildId    = """SELECT guildId
+                                         FROM pcs
+                                         WHERE name = ?
+                                         LIMIT 1"""
+            result_gdc_user_guildId = query(SQL_gdc_user_guildId, (user,), False, False)
 
-            if result_gdc_user_guildId:
-                guildId    = result_gdc_user_guildId[0]
+            result_json = json.loads(result)
+            for elem in result_json:
+                SQL_tile_res    = """SELECT name
+                                     FROM resources
+                                     WHERE ( x = ? AND y = ? )
+                                     UNION ALL
+                                     SELECT name
+                                     FROM npcs
+                                     WHERE ( x = ? AND y = ? AND name = 'Kradjeck ferreux' )"""
+                result_tile_res = query(SQL_tile_res,(elem['x'],elem['y'],elem['x'],elem['y']),False,False)
 
-                SQL_tile_gdc    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? AND guildID = ? )"""
-                result_tile_gdc = query(SQL_tile_pcs,(elem['x'],elem['y'],guildId),False,False)
+                if result_gdc_user_guildId:
+                    guildId    = result_gdc_user_guildId[0]
 
-                SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? AND NOT guildID = ? )"""
-                result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],guildId),False,False)
-            else:
-                SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? )"""
-                result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],),False,False)
+                    SQL_tile_gdc    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? AND guildID = ? )"""
+                    result_tile_gdc = query(SQL_tile_gdc,(elem['x'],elem['y'],guildId),False,False)
 
-            SQL_tile_pla    = """SELECT name FROM places WHERE ( x = ? AND y = ? )"""
-            result_tile_pla = query(SQL_tile_pla,(elem['x'],elem['y'],),False,False)
+                    SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? AND NOT guildID = ? )"""
+                    result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],guildId),False,False)
+                else:
+                    SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? )"""
+                    result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],),False,False)
 
-            if result_tile_res:
-                elem.update({'on_tile': {'resource': result_tile_res[0]}})
-            elif result_tile_pcs:
-                elem.update({'on_tile': {'pc': result_tile_pcs[0]}})
-            elif result_tile_pla:
-                elem.update({'on_tile': {'place': result_tile_pla[0]}})
-            elif result_tile_gdc:
-                elem.update({'on_tile': {'gdc': result_tile_gdc[0]}})
-            else:
-                elem.update({'on_tile': {}})
+                #SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? )"""
+                #result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],),False,False)
+
+                SQL_tile_pla    = """SELECT name FROM places WHERE ( x = ? AND y = ? )"""
+                result_tile_pla = query(SQL_tile_pla,(elem['x'],elem['y'],),False,False)
+
+                if result_tile_res:
+                    elem.update({'on_tile': {'resource': result_tile_res[0]}})
+                elif result_tile_pcs:
+                    elem.update({'on_tile': {'pc': result_tile_pcs[0]}})
+                elif result_tile_pla:
+                    elem.update({'on_tile': {'place': result_tile_pla[0]}})
+                elif result_tile_gdc:
+                    elem.update({'on_tile': {'gdc': result_tile_gdc[0]}})
+                else:
+                    elem.update({'on_tile': {}})
+
+            r.set(key, json.dumps(result_json), ex = 1800)
+
         return json.dumps(result_json)
 
 def query_tiles_all():
     SQL     = """SELECT * FROM tiles WHERE ?"""
-    result = query(SQL,(1,),True,True)
+    if r.exists('tiles_all') > 0:
+        result = r.get('tiles_all')
+    else:
+        result = query(SQL,(1,),True,True)
+        try:
+            r.set('tiles_all', result)
+            print('Successfully connected to redis')
+        except redis.exceptions.ConnectionError as r_con_error:
+            print('Redis connection error')
+
     if result:
         return result
 

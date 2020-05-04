@@ -17,6 +17,7 @@ apk update --no-cache \
                                       Flask-cors \
                                       Flask-httpauth \
                                       Pillow-PIL \
+                                      redis \
                                       pytest \
     && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
     && apk del .build-deps \
