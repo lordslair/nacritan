@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  namespace: nacritan
   name: nacritan-backend-nginx
   labels:
     tier: nacritan-backend

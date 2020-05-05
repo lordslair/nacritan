@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  namespace: nacritan
   name: nacritan-backend-code-api
 spec:
   storageClassName: csi-cinder-classic
