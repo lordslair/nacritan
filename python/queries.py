@@ -102,11 +102,11 @@ def query_tiles_minimap(x,y,n,user):
 
             result_json = json.loads(result)
             for elem in result_json:
-                SQL_tile_res    = """SELECT name
+                SQL_tile_res    = """SELECT name,level
                                      FROM resources
                                      WHERE ( x = ? AND y = ? )
                                      UNION ALL
-                                     SELECT name
+                                     SELECT name,level
                                      FROM npcs
                                      WHERE ( x = ? AND y = ? AND name = 'Kradjeck ferreux' )"""
                 result_tile_res = query(SQL_tile_res,(elem['x'],elem['y'],elem['x'],elem['y']),False,False)
@@ -130,7 +130,7 @@ def query_tiles_minimap(x,y,n,user):
                 result_tile_pla = query(SQL_tile_pla,(elem['x'],elem['y'],),False,False)
 
                 if result_tile_res:
-                    elem.update({'on_tile': {'resource': result_tile_res[0]}})
+                    elem.update({'on_tile': {'resource': result_tile_res[0], 'level': result_tile_res[1]}})
                 elif result_tile_pcs:
                     elem.update({'on_tile': {'pc': result_tile_pcs[0]}})
                 elif result_tile_pla:
