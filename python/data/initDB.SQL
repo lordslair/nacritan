@@ -5,8 +5,8 @@ name      TEXT     NOT NULL,
 wounds    TEXT     NULL,
 guildId   INT      NULL,
 guildName TEXT     NULL,
-x         INT      NOT NULL,
-y         INT      NOT NULL,
+x         INT      NULL,
+y         INT      NULL,
 user      TEXT     NOT NULL,
 date      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
 

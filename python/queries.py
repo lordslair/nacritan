@@ -122,9 +122,7 @@ def query_tiles_minimap(x,y,n,user):
                 else:
                     SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? )"""
                     result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],),False,False)
-
-                #SQL_tile_pcs    = """SELECT name FROM pcs WHERE ( x = ? AND y = ? )"""
-                #result_tile_pcs = query(SQL_tile_pcs,(elem['x'],elem['y'],),False,False)
+                    result_tile_gdc = None
 
                 SQL_tile_pla    = """SELECT name FROM places WHERE ( x = ? AND y = ? )"""
                 result_tile_pla = query(SQL_tile_pla,(elem['x'],elem['y'],),False,False)
@@ -218,6 +216,11 @@ def query_insert_pcs(rawjson,user):
                                                 COALESCE(?, (SELECT user      FROM pcs WHERE id = {} ))
                                                )""").format(id, id, id, id, id, id, id, id, id)
                     query_insert(SQL_pcs, (pc['id'], pc['level'], pc['name'], pc['wounds'], pc['guildId'], pc['guildName'], elem['x'], elem['y'], user))
+        else:
+            # Here we are on coords (x,y) without a pcs, we should do nothing
+            # BUT, maybe there was a npc before, and vanished, died, moved. We need to DELETE the row in that case
+            SQL_pcs = """UPDATE pcs SET x = NULL, y = NULL WHERE x = ? AND y = ?"""
+            query_insert(SQL_pcs, (elem['x'], elem['y']))
 
 def query_insert_npcs(rawjson,user):
     for elem in rawjson:
