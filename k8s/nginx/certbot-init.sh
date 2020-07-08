@@ -4,4 +4,5 @@ certbot certonly --logs-dir /var/www/certbot \
                  -d <CERTBOT_DOMAINS> \
                  --email <CERTBOT_EMAIL> \
                  --agree-tos \
-                 --no-eff-email
+                 --no-eff-email \
+                 --dry-run
