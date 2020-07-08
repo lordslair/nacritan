@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nacritan
+  name: nacritan-backend-backup
+  labels:
+    tier: nacritan-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backup
+      tier: nacritan-backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: backup
+        tier: nacritan-backend
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: nacritan-backend-backup
+        image: alpine:3.12
+        command: ["/bin/sh"]
+        args: [
+         "-c",
+         "(
+              wget -O - https://raw.githubusercontent.com/lordslair/nacridan-retriever-backend/master/backup/entrypoint.sh | sh
+          ) || echo 1"
+        ]
+        env:
+        - name: SQLITE_DB_NAME
+          value: '/db/nacridan.db'
+        - name: PCA_USER
+          value: 'pca'
+        - name: PCA_PASS
+          value: '<PCA_PASS>'
+        volumeMounts:
+        - mountPath: /db
+          name: db
+
+      volumes:
+      - name: db
+        persistentVolumeClaim:
+          claimName: nacritan-backend-sqlite-db
