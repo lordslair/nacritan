@@ -19,29 +19,18 @@ spec:
         app: api
         tier: nacritan-backend
     spec:
+      restartPolicy: Always
 
-      initContainers:
-      - name: nacritan-backend-api-init
-        image: busybox
-        volumeMounts:
-        - name: code
-          mountPath: /code
+      containers:
+      - name: nacritan-backend-api
+        image: alpine:3.12
         command: ["/bin/sh"]
         args: [
          "-c",
          "(
-              wget   https://github.com/lordslair/nacridan-retriever-backend/archive/master.zip -O /tmp/nrb.zip &&
-              unzip  /tmp/nrb.zip -d /tmp/ &&
-              cp -a  /tmp/nacridan-retriever-backend-master/python/* /code/ &&
-              rm -rf /tmp/nacridan-retriever-backend-master &&
-              rm -rf /tmp/nrb.zip
+              wget -O - https://raw.githubusercontent.com/lordslair/nacridan-retriever-backend/master/python/entrypoint.sh | sh
           ) || echo 1"
         ]
-
-      containers:
-      - name: nacritan-backend-api
-        image: alpine
-        command: ["/code/entrypoint.sh"]
         env:
         - name: FLASK_DEBUG
           value: '--debugger'
@@ -62,16 +51,10 @@ spec:
         - name: REDIS_HOST
           value: 'nacritan-backend-redis-svc'
         volumeMounts:
-        - mountPath: /code
-          name: code
         - mountPath: /db
           name: db
-      restartPolicy: Always
 
       volumes:
-      - name: code
-        persistentVolumeClaim:
-          claimName: nacritan-backend-code-api
       - name: db
         persistentVolumeClaim:
-          claimName: nacritan-sqlite-db
+          claimName: nacritan-backend-sqlite-db

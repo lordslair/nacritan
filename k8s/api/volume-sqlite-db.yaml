@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: nacritan
-  name: nacritan-sqlite-db
+  name: nacritan-backend-sqlite-db
 spec:
   storageClassName: csi-cinder-classic
   accessModes:
