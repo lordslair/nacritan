@@ -25,6 +25,15 @@ apk update --no-cache \
 
 echo "`date +"%F %X"` Build done ..."
 
+echo "`date +"%F %X"` Loading Python scripts ..."
+mkdir  /code && cd /code
+wget   https://github.com/lordslair/nacridan-retriever-backend/archive/master.zip -O /tmp/nrb.zip &&
+unzip  /tmp/nrb.zip -d /tmp/ &&
+cp -a  /tmp/nacridan-retriever-backend-master/python/* /code/ &&
+rm -rf /tmp/nacridan-retriever-backend-master &&
+rm -rf /tmp/nrb.zip
+echo "`date +"%F %X"` Loading done ..."
+
 exec flask run --host=$FLASK_HOST \
                --port=$FLASK_PORT \
                $FLASK_DEBUG \
