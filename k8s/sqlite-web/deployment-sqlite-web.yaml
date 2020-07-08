@@ -19,6 +19,7 @@ spec:
         app: sqlite-web
         tier: nacritan-backend
     spec:
+      restartPolicy: Always
 
       initContainers:
       - name: nacritan-sqlite-web-init
@@ -40,7 +41,7 @@ spec:
 
       containers:
       - name: nacritan-sqlite-web
-        image: alpine
+        image: alpine:3.12
         command: ["/db/entrypoint.sh"]
         env:
         - name: SQLITE_DB_NAME
@@ -59,4 +60,4 @@ spec:
       volumes:
       - name: db
         persistentVolumeClaim:
-          claimName: nacritan-sqlite-db
+          claimName: nacritan-backend-sqlite-db
