@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DAY=$(date +%d)
+PERIOD='daily'
+ZIPFILE=$DAY-nacritan.db.zip
+
+echo "$NOW [$PERIOD] Dumping : $SQLITE_DB_NAME > $ZIPFILE"
+
+if [[ -e "$SQLITE_DB_NAME" ]]
+then
+    zip $ZIPFILE $SQLITE_DB_NAME
+    sshpass -p "$PCA_PASS" rsync -a $ZIPFILE $PCA_USER@gateways.storage.gra.cloud.ovh.net:NCC-1701-A/NacrITan/$PERIOD/
+    rm $ZIPFILE
+else
+    echo "$NOW [$PERIOD] WARN: DB does not exist. Shit happened !"
+fi
