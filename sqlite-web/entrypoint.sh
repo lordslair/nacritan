@@ -11,7 +11,7 @@ apk update --no-cache \
                                     gcc \
                                     libc-dev \
                                     tzdata \
-    && pip3 --no-cache-dir install -U sqlite-web \
+    && pip --no-cache-dir install -U sqlite-web \
     && cp /usr/share/zoneinfo/Europe/Paris /etc/localtime \
     && apk del .build-deps
 
