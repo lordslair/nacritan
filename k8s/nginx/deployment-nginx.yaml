@@ -36,7 +36,7 @@ spec:
       - name: nacritan-backend-nginx-certbot
         image: certbot/certbot
         command: ["/bin/sh"]
-        args: ["-c", "while :; do sleep 60; done;"]
+        args: ["-c", "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;"]
         volumeMounts:
          - name: www
            mountPath: /var/www/certbot
