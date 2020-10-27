@@ -23,19 +23,21 @@ spec:
 
       containers:
       - name: nacritan-backend-backup
-        image: alpine:3.12
-        command: ["/bin/sh"]
-        args: [
-         "-c",
-         "(
-              wget -O - https://raw.githubusercontent.com/lordslair/nacridan-retriever-backend/master/backup/entrypoint.sh | sh
-          ) || echo 1"
-        ]
+        image: lordslair/easydbbackup:1.1.0
+        imagePullPolicy: Always
         env:
-        - name: SQLITE_DB_NAME
-          value: '/db/nacridan.db'
+        - name: SQLITE
+          value: '<SQLITE>' # Boolean (True|False)
+        - name: SQLITE_FILE
+          value: '<SQLITE_FILE>'
+        - name: SQLITE_PATH
+          value: '<SQLITE_PATH>'
         - name: PCA_USER
           value: 'pca'
+        - name: PCA_HOST
+          value: '<PCA_HOST>'
+        - name: PCA_DIR
+          value: '<PCA_DIR>'
         - name: PCA_PASS
           value: '<PCA_PASS>'
         volumeMounts:
