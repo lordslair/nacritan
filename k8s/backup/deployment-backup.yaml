@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: nacritan-backend-backup
-        image: lordslair/easydbbackup:1.1.0
+        image: lordslair/easydbbackup:1.2.0
         imagePullPolicy: Always
         env:
         - name: SQLITE
@@ -32,14 +32,28 @@ spec:
           value: '<SQLITE_FILE>'
         - name: SQLITE_PATH
           value: '<SQLITE_PATH>'
-        - name: PCA_USER
-          value: 'pca'
-        - name: PCA_HOST
-          value: '<PCA_HOST>'
-        - name: PCA_DIR
-          value: '<PCA_DIR>'
-        - name: PCA_PASS
-          value: '<PCA_PASS>'
+        - name: RCLONE_CONFIG_PCS_TYPE
+          value: 'swift'
+        - name: RCLONE_CONFIG_PCS_ENV_AUTH
+          value: 'false'
+        - name: RCLONE_CONFIG_PCS_AUTH_VERSION
+          value: '3'
+        - name: RCLONE_CONFIG_PCS_TENANT_DOMAIN
+          value: 'default'
+        - name: RCLONE_CONFIG_PCS_DOMAIN
+          value: 'default'
+        - name: RCLONE_CONFIG_PCS_AUTH
+          value: 'https://auth.pcs.provider/v3/'
+        - name: RCLONE_CONFIG_PCS_TENANT
+          value: 'OS_TENANT_NAME'
+        - name: RCLONE_CONFIG_PCS_USER
+          value: 'OS_USERNAME'
+        - name: RCLONE_CONFIG_PCS_KEY
+          value: 'OS_PASSWORD'
+        - name: RCLONE_CONFIG_PCS_REGION
+          value: 'OS_REGION_NAME'
+        - name: RCLONE_CONFIG_PCS_DIR
+          value: 'backups/rclone'
         volumeMounts:
         - mountPath: /db
           name: db
