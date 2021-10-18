@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: nacritan
-  name: nacritan-backend-api
+  name: nacritan-backend-api-svc
   labels:
     tier: nacritan-backend
 spec:
