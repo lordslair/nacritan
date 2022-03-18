@@ -23,12 +23,12 @@ spec:
 
       containers:
       - name: nacritan-backend-backup
-        image: lordslair/easydbbackup:1.2.0
+        image: lordslair/easydbbackup:1.4.0
         imagePullPolicy: Always
         env:
-        - name: SQLITE
+        - name: SQLITE_DUMP
           value: '<SQLITE>' # Boolean (True|False)
-        - name: SQLITE_FILE
+        - name: SQLITE_DB
           value: '<SQLITE_FILE>'
         - name: SQLITE_PATH
           value: '<SQLITE_PATH>'
