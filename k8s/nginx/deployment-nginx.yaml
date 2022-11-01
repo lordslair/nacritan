@@ -19,6 +19,8 @@ spec:
         app: nginx
         tier: nacritan-backend
     spec:
+      restartPolicy: Always
+      nodeName: nodepool-b9ea22df-ec7f-4761-bc-node-527567
 
       containers:
       - name: nacritan-backend-nginx
@@ -42,7 +44,6 @@ spec:
            mountPath: /var/www/certbot
          - name: certs
            mountPath: /etc/letsencrypt
-      restartPolicy: Always
 
       volumes:
       - name: config
