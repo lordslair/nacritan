@@ -5,7 +5,10 @@ metadata:
   name: nacritan-lb
   labels:
     tier: nacritan-backend
+  annotations:
+    service.beta.kubernetes.io/ovh-loadbalancer-proxy-protocol: "v2"
 spec:
+  externalTrafficPolicy: Local
   type: LoadBalancer
   selector:
     app: nginx
