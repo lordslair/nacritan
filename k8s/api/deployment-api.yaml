@@ -33,13 +33,11 @@ spec:
         ]
         env:
         - name: FLASK_DEBUG
-          value: '--debugger'
+          value: '--debug'
         - name: FLASK_THREAD
           value: '--without-threads'
         - name: SQLITE_DB_NAME
           value: /db/nacridan.db
-        - name: FLASK_ENV
-          value: 'development'
         - name: FLASK_APP
           value: '/code/app.py'
         - name: FLASK_HOST
