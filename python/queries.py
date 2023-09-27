@@ -6,14 +6,13 @@ import json
 import redis
 
 from functions import dict_factory
-from variables import (REDIS_PORT,
-                       REDIS_HOST,
-                       REDIS_DB_NAME)
-from variables import SQLITE_DB_NAME
 
-r = redis.StrictRedis(host     = REDIS_HOST,
-                      port     = REDIS_PORT,
-                      db       = REDIS_DB_NAME,
+# SQLite variables
+SQLITE_DB_NAME = os.environ['SQLITE_DB_NAME']
+
+r = redis.StrictRedis(host     = os.environ['REDIS_HOST'],
+                      port     = 6379,
+                      db       = 0,
                       encoding = 'utf-8')
 
 # Meta Query
