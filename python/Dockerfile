@@ -31,4 +31,4 @@ RUN apk update --no-cache \
 
 USER api
 
-ENTRYPOINT ["/usr/bin/flask", "run", "--host=$FLASK_HOST", "--port=$FLASK_PORT", "$FLASK_THREAD"]
+ENTRYPOINT ["/usr/bin/python3", "app.py"]

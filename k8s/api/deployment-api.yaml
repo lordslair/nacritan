@@ -23,14 +23,14 @@ spec:
 
       containers:
       - name: nacritan-backend-api
-        image: alpine:3.12
-        command: ["/bin/sh"]
-        args: [
-         "-c",
-         "(
-              wget -O - https://raw.githubusercontent.com/lordslair/nacridan-retriever-backend/master/python/entrypoint.sh | sh
-          ) || echo 1"
-        ]
+        image: lordslair:nacritan
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 200m
+          requests:
+            memory: 64Mi
+            cpu: 100m
         env:
         - name: FLASK_DEBUG
           value: '--debug'
