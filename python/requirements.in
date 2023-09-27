@@ -1,0 +1,5 @@
+Flask                     == 2.0.0
+Flask-httpauth            ~= 4.3.0
+Flask-cors                ~= 4.0
+Pillow                    ~= 10.0
+redis                     ~= 5.0
