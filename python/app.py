@@ -15,17 +15,20 @@ from queries import (
     query_tiles_zone,
     query_select_gdc,
 )
-from functions import funct_infos, funct_worldmap
-from variables import tokens
+from functions import funct_worldmap
 
+from datetime import datetime
 from flask import Flask, request, g, abort, send_file
 from flask_cors import CORS
 from flask_httpauth import HTTPTokenAuth
+import os
 
 app = Flask(__name__)
 CORS(app)
 
 auth = HTTPTokenAuth('Basic')
+
+tokens = eval(os.environ['AUTH_TOKENS'])
 
 
 @auth.verify_token
@@ -40,7 +43,11 @@ def verify_token(token):
 @auth.login_required
 def get_infos():
     if request.remote_addr == "127.0.0.1":
-        return funct_infos(g.current_user)
+        return {
+            "host": os.uname().nodename,
+            "date": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+            "user": g.current_user,
+        }
     else:
         abort(403)
 

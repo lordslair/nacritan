@@ -33,7 +33,6 @@ Actually, it works this way :
     │   └── test_03_redis.py          |  Tests for redis
     ├── app.py                        |  Flask main app
     ├── functions.py                  |  library to handle common f()
-    ├── variables.py                  |  library to handle global variables
     └── queries.py                    |  library to handle SQL layer
 ```
 

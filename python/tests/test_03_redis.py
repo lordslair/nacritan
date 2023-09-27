@@ -8,13 +8,9 @@ sys.path.append(code)
 
 from app import app
 
-from variables import (REDIS_PORT,
-                       REDIS_HOST,
-                       REDIS_DB_NAME)
-
-r = redis.StrictRedis(host     = REDIS_HOST,
-                      port     = REDIS_PORT,
-                      db       = REDIS_DB_NAME,
+r = redis.StrictRedis(host     = os.environ['REDIS_HOST'],
+                      port     = 6379,
+                      db       = 0,
                       encoding = 'utf-8')
 
 def test_nacritan_redis_connection():
