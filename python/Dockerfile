@@ -26,7 +26,7 @@ RUN apk update --no-cache \
     && su api -c \
         "python3 -m ensurepip --upgrade && \
         pip3 install --user -U -r requirements.txt && \
-        rm requirements.txt" \
+        rm requirements.* Dockerfile" \
     && apk del .build-deps
 
 USER api
