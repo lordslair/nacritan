@@ -1,6 +1,6 @@
 Flask == 2.0.0
 Flask-CORS ~= 4.0
-Flask-HTTPAuth ~= 4.3.0
+Flask-HTTPAuth ~= 4.8.0
 Flask-SQLAlchemy ~= 2.5
 Pillow ~= 10.0
 Redis ~= 5.0
