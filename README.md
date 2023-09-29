@@ -12,6 +12,7 @@ Actually, it works this way :
 
  - (nacritan-backend-nginx)      runs the proxy to serve the URLs, and SSL certs
  - (nacritan-backend-api)        runs the Flask app
+ - (nacritan-backend-backup)     runs the DB rotating backups 24h/30d/52w/12m
 
 ### Which script does what ?
 
@@ -50,7 +51,7 @@ And of course GitHub to store all these shenanigans.
      +-----------------------+-----------------------+
                              |
                     +--------v--------+
-                    |      nginx:443  |
+                    |    nginx:443    |
                     +--------+--------+
                              |
                     +--------v--------+
@@ -73,7 +74,7 @@ $ kubectl apply -f *
 ```
 
 This will create :
-- The 2 pods : nginx, api
+- The 2 pods : nginx, api (+ backup if needed)
 
 ```
 $ kubectl get pods
@@ -91,7 +92,7 @@ nacritan-backend-certbot-certs  Bound   pvc-[...]-5312025190d9   1Gi       [...]
 nacritan-backend-certbot-www    Bound   pvc-[...]-d6ab9d74cf8b   1Gi       [...]
 ```
 
-- The 5 services : nginx, api, sqlite-web, redis & loadbalancer
+- The 3 services : nginx, api & loadbalancer
 
 ```
 $ kubectl get services
@@ -107,7 +108,6 @@ nacritan-backend-nginx       ClusterIP      10.3.202.163   <none>       80/TCP,4
 
 ### Todos
 
- - Add a container for backups
  - Add a container for Discord integration
 
 ---
