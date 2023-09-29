@@ -32,27 +32,30 @@ spec:
             memory: 64Mi
             cpu: 100m
         env:
-        - name: FLASK_DEBUG
-          value: '--debug'
+        # FLASK env vars
+        - name: FLASK_ENV
+          value: 'development'
         - name: FLASK_THREAD
           value: '--without-threads'
-        - name: SQLITE_DB_NAME
-          value: /db/nacridan.db
-        - name: FLASK_APP
-          value: '/code/app.py'
-        - name: FLASK_HOST
-          value: '0.0.0.0'
-        - name: FLASK_PORT
-          value: '5000'
+        # SQL env vars
+        - name: MYSQL_HOST
+          value: '<MYSQL_HOST>'
+        - name: MYSQL_PORT
+          value: '<MYSQL_PORT>'
+        - name: MYSQL_USER
+          value: '<MYSQL_USER>'
+        - name: MYSQL_PASS
+          value: '<MYSQL_PASS>'
+        - name: MYSQL_BASE
+          value: '<MYSQL_BASE>'
+        # AUTH env vars
         - name: AUTH_TOKENS
           value: "{'TOKEN1': 'user1','TOKEN2': 'user2'}"
-        - name: REDIS_HOST
-          value: 'nacritan-backend-redis-svc'
-        volumeMounts:
-        - mountPath: /db
-          name: db
-
-      volumes:
-      - name: db
-        persistentVolumeClaim:
-          claimName: nacritan-backend-sqlite-db
+        # Python env vars
+        - name: PYTHONUNBUFFERED
+          value: 'True'
+        - name: PYTHONIOENCODING
+          value: 'UTF-8'
+        # Other env vars
+        - name: LOGURU_LEVEL
+          value: 'DEBUG'
