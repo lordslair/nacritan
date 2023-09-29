@@ -23,15 +23,32 @@ spec:
 
       containers:
       - name: nacritan-backend-backup
-        image: lordslair/easydbbackup:1.4.0
+        image: lordslair/easydbbackup:1.6.0
         imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 200m
+          requests:
+            memory: 64Mi
+            cpu: 100m
         env:
         - name: SQLITE_DUMP
-          value: '<SQLITE>' # Boolean (True|False)
-        - name: SQLITE_DB
-          value: '<SQLITE_FILE>'
-        - name: SQLITE_PATH
-          value: '<SQLITE_PATH>'
+          value: 'False' # Boolean (True|False)
+        - name: REDIS_DUMP
+          value: 'False' # Boolean (True|False)
+        - name: MYSQL_DUMP
+          value: 'True'  # Boolean (True|False)
+        - name: MYSQL_DB_LIST
+          value: '<MYSQL_DB_LIST>'
+        - name: MYSQL_DB_HOST
+          value: '<MYSQL_DB_HOST>'
+        - name: MYSQL_DB_PORT
+          value: '<MYSQL_DB_PORT>'
+        - name: MYSQL_DB_USER
+          value: '<MYSQL_DB_USER>'
+        - name: MYSQL_DB_PASS
+          value: '<MYSQL_DB_PASS>'
         - name: RCLONE_CONFIG_PCS_TYPE
           value: 'swift'
         - name: RCLONE_CONFIG_PCS_ENV_AUTH
@@ -54,11 +71,3 @@ spec:
           value: 'OS_REGION_NAME'
         - name: RCLONE_CONFIG_PCS_DIR
           value: 'backups/rclone'
-        volumeMounts:
-        - mountPath: /db
-          name: db
-
-      volumes:
-      - name: db
-        persistentVolumeClaim:
-          claimName: nacritan-backend-sqlite-db
