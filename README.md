@@ -2,8 +2,7 @@
 
 This project is a backend for a Tactical Interface (IT) in the game Nacridan.  
 Its purpose is to parse data received from JS user scripts.  
-It's done by a Python backend to query a SQLite DB.  
-And a Python-Flask API, to return JSON if requested.  
+It's done by a Python backend (Flask API) querying a (remote) MySQL DB.  
 
 All of this inside Docker containers for portable purposes.  
 These containers are powered up by Kubernetes.  
