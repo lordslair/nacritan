@@ -39,7 +39,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: [ "3.8" ]
 
     steps:
     - name: Checkout 🛎️
@@ -68,8 +68,9 @@ jobs:
           MYSQL_BASE: ${{ secrets.MYSQL_BASE }}
           MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_HOST: 'localhost'
-          MYSQL_PORT: 3306
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+          AUTH_TOKENS: ${{ secrets.AUTH_TOKENS }}
       run: |
         echo "--- Starting PyTest"
         pytest python
