@@ -45,12 +45,12 @@ jobs:
     - name: Checkout 🛎️
       uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }} 🐍
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install requirements
+    - name: Install requirements ⏬
       run: |
         echo "--- Installing PIP"
         python -m pip install --upgrade pip
@@ -59,13 +59,13 @@ jobs:
         echo "--- Installing requirements"
         if [ -f python/requirements.txt ]; then pip install -r python/requirements.txt; fi
 
-    - name: Lint with flake8
+    - name: Lint with flake8 📝
       run: |
         # stop the build if there are Python syntax errors or undefined names
         echo "--- Linting with flake8"
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    - name: Test with PyTest
+    - name: Test with PyTest ⚙️
       env:
           MYSQL_BASE: ${{ secrets.MYSQL_BASE }}
           MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
@@ -74,5 +74,9 @@ jobs:
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
           AUTH_TOKENS: ${{ secrets.AUTH_TOKENS }}
       run: |
+        echo "--- Starting app in background"
+        python3 python/app.py &
+        echo "--- Sleep(3)"
+        sleep 3
         echo "--- Starting PyTest"
         pytest python
