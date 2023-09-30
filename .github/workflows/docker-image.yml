@@ -1,19 +1,15 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ master ]
-    tags:
-      - 'v*'
-  pull_request:
-    branches: [ master ]
-
-env:
-  IMAGE_REPO: lordslair
-  IMAGE_NAME: nacritan
+  workflow_run:
+    workflows: ["Python PyTest (API)"]
+    branches: [ "master" ]
+    types:
+      - completed
 
 jobs:
   docker:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +26,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}
+        images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
         tags: |
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
