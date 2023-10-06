@@ -23,7 +23,7 @@ spec:
 
       containers:
       - name: nacritan-backend-api
-        image: lordslair:nacritan
+        image: lordslair/nacritan:latest
         resources:
           limits:
             memory: 128Mi
@@ -56,6 +56,15 @@ spec:
           value: 'True'
         - name: PYTHONIOENCODING
           value: 'UTF-8'
-        # Other env vars
+        # Loguru env vars
+        - name: LOGURU_FORMAT
+          value: '<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>level={level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>'
+        - name: LOGURU_COLORIZE
+          value: 'true'
+        - name: LOGURU_DEBUG_COLOR
+          value: '<cyan><bold>'
         - name: LOGURU_LEVEL
-          value: 'DEBUG'
+          value: 'TRACE'
+        # Other env vars
+        - name: TZ
+          value: 'Europe/Paris'
