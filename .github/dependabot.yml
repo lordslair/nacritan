@@ -6,7 +6,7 @@
 version: 2
 updates:
   - package-ecosystem: "pip"
-    directory: "/python"
+    directory: "/"
     schedule:
       interval: "weekly"
   # Maintain dependencies for GitHub Actions
@@ -16,6 +16,6 @@ updates:
       interval: "weekly"
   # Maintain Dockerfile content
   - package-ecosystem: "docker"
-    directory: "/python"
+    directory: "/"
     schedule:
       interval: "weekly"

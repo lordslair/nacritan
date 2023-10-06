@@ -57,7 +57,7 @@ jobs:
         echo "--- Installing PyTest prerequisites"
         pip install pytest flake8 cryptography
         echo "--- Installing requirements"
-        if [ -f python/requirements.txt ]; then pip install -r python/requirements.txt; fi
+        if [ -f /requirements.txt ]; then pip install -r /requirements.txt; fi
 
     - name: Lint with flake8 📝
       run: |
@@ -75,11 +75,11 @@ jobs:
           AUTH_TOKENS: ${{ secrets.AUTH_TOKENS }}
       run: |
         echo "--- Starting app in background"
-        python3 python/app.py &
+        /code/app.py &
         echo "--- Sleep(3)"
         sleep 3
         echo "--- Starting PyTest"
-        pytest python
+        pytest code
 
   python-build:
     runs-on: ubuntu-latest
@@ -113,7 +113,6 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./python/Dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}

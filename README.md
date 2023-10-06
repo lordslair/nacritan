@@ -1,4 +1,4 @@
-# nacridan-retriever-backend, the project :
+# nacrITan, the project :
 
 This project is a backend for a Tactical Interface (IT) in the game Nacridan.  
 Its purpose is to parse data received from JS user scripts.  
@@ -20,7 +20,7 @@ Actually, it works this way :
 ├── k8s                               |  
 │   ├── deployment-*.yaml             |  Pods deployment files
 │   └── service-*.yaml                |  Services deployment files
-└── python                            |  
+└── code                            |  
     ├── tests
     │   ├── test_00_vars.py           |  Tests for token presence
     │   ├── test_01_auth.py           |  Tests for token auth by routes
