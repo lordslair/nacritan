@@ -4,13 +4,11 @@
 #
 #    pip-compile requirements.in
 #
-async-timeout==4.0.3
-    # via redis
 blinker==1.6.2
     # via flask
 click==8.1.7
     # via flask
-flask==2.3.3
+flask==3.0.0
     # via
     #   -r requirements.in
     #   flask-cors
@@ -24,8 +22,6 @@ flask-sqlalchemy==3.1.1
     # via -r requirements.in
 greenlet==2.0.2
     # via sqlalchemy
-importlib-metadata==6.8.0
-    # via flask
 itsdangerous==2.1.2
     # via flask
 jinja2==3.1.2
@@ -50,7 +46,5 @@ sqlalchemy-serializer==1.4.1
     # via -r requirements.in
 typing-extensions==4.8.0
     # via sqlalchemy
-werkzeug==2.3.7
+werkzeug==3.0.0
     # via flask
-zipp==3.17.0
-    # via importlib-metadata
