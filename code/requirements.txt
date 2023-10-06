@@ -10,16 +10,16 @@ click==8.1.7
     # via flask
 flask==3.0.0
     # via
-    #   -r requirements.in
+    #   -r code/requirements.in
     #   flask-cors
     #   flask-httpauth
     #   flask-sqlalchemy
 flask-cors==4.0.0
-    # via -r requirements.in
+    # via -r code/requirements.in
 flask-httpauth==4.8.0
-    # via -r requirements.in
+    # via -r code/requirements.in
 flask-sqlalchemy==3.1.1
-    # via -r requirements.in
+    # via -r code/requirements.in
 greenlet==2.0.2
     # via sqlalchemy
 itsdangerous==2.1.2
@@ -27,23 +27,23 @@ itsdangerous==2.1.2
 jinja2==3.1.2
     # via flask
 loguru==0.7.2
-    # via -r requirements.in
+    # via -r code/requirements.in
 markupsafe==2.1.3
     # via
     #   jinja2
     #   werkzeug
 pillow==10.0.1
-    # via -r requirements.in
+    # via -r code/requirements.in
 pymysql==1.1.0
-    # via -r requirements.in
+    # via -r code/requirements.in
 redis==5.0.1
-    # via -r requirements.in
+    # via -r code/requirements.in
 sqlalchemy==2.0.21
     # via
     #   flask-sqlalchemy
     #   sqlalchemy-serializer
 sqlalchemy-serializer==1.4.1
-    # via -r requirements.in
+    # via -r code/requirements.in
 typing-extensions==4.8.0
     # via sqlalchemy
 werkzeug==3.0.0
