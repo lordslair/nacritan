@@ -75,7 +75,7 @@ jobs:
           AUTH_TOKENS: ${{ secrets.AUTH_TOKENS }}
       run: |
         echo "--- Starting app in background"
-        python3 python/app.py &
+        python3 code/app.py &
         echo "--- Sleep(3)"
         sleep 3
         echo "--- Starting PyTest"
