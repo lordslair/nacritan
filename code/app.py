@@ -15,11 +15,13 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-MYSQL_USER = os.environ['MYSQL_USER']
-MYSQL_PASS = os.environ['MYSQL_PASS']
-MYSQL_HOST = os.environ['MYSQL_HOST']
-MYSQL_PORT = os.environ['MYSQL_PORT']
-MYSQL_BASE = os.environ['MYSQL_BASE']
+os.environ.get("DISCORD_TOKEN", None)
+
+MYSQL_USER = os.environ.get('MYSQL_USER', 'nacritan')
+MYSQL_PASS = os.environ.get('MYSQL_PASS')
+MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
+MYSQL_PORT = os.environ.get('MYSQL_PORT', 3306)
+MYSQL_BASE = os.environ.get('MYSQL_BASE', 'nacritan')
 MYSQL_URI = f'{MYSQL_USER}:{MYSQL_PASS}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_BASE}'
 
 # SQLAlchemy Database Configuration With Mysql
