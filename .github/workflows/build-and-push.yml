@@ -94,14 +94,14 @@ jobs:
     - name: Log in to Docker Hub 🔐
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
+        username: ${{ vars.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Extracting Metadata 🔧
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
+        images: ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_IMAGE }}
         tags: |
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
