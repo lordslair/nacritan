@@ -25,9 +25,9 @@ jobs:
           # The MySQL docker container requires these environment variables to be set
           # so we can create and migrate the test database.
           # See: https://hub.docker.com/_/mysql
-          MYSQL_DATABASE: ${{ secrets.MYSQL_BASE }}
+          MYSQL_DATABASE: ${{ vars.MYSQL_BASE }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASS }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_USER: ${{ vars.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASS }}
         ports:
           # Opens port 3306 on service container and host
@@ -67,11 +67,11 @@ jobs:
 
     - name: Test with PyTest ⚙️
       env:
-          MYSQL_BASE: ${{ secrets.MYSQL_BASE }}
+          MYSQL_BASE: ${{ vars.MYSQL_BASE }}
           MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
-          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+          MYSQL_USER: ${{ vars.MYSQL_USER }}
+          MYSQL_HOST: ${{ vars.MYSQL_HOST }}
+          MYSQL_PORT: ${{ vars.MYSQL_PORT }}
           AUTH_TOKENS: ${{ secrets.AUTH_TOKENS }}
       run: |
         echo "--- Starting app in background"
