@@ -1,2 +1,2 @@
 *.production.yaml
-PROD/
+*.development.yaml
