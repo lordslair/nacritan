@@ -1,0 +1,118 @@
+# This workflow will install Python dependencies, run tests with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Pipeline Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  app-pytest:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          # The MySQL docker container requires these environment variables to be set
+          # so we can create and migrate the test database.
+          # See: https://hub.docker.com/_/mysql
+          MYSQL_DATABASE: ${{ vars.MYSQL_BASE }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASS }}
+          MYSQL_USER: ${{ vars.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASS }}
+        ports:
+          # Opens port 3306 on service container and host
+          # https://docs.github.com/en/actions/using-containerized-services/about-service-containers
+          - 3306:3306
+          # Before continuing, verify the mysql container is reachable from the ubuntu host
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+
+    strategy:
+      matrix:
+        python-version: [ "3.9", "3.10", "3.11" ]
+
+    steps:
+    - name: Checkout 🛎️
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }} 🐍
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install requirements ⏬
+      run: |
+        echo "--- Installing PIP"
+        python -m pip install --upgrade pip
+        echo "--- Installing PyTest prerequisites"
+        pip install pytest flake8
+        echo "--- Installing requirements"
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Lint with flake8 📝
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    - name: Test with PyTest ⚙️
+      env:
+          MYSQL_BASE: ${{ vars.MYSQL_BASE }}
+          MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
+          MYSQL_USER: ${{ vars.MYSQL_USER }}
+          MYSQL_HOST: ${{ vars.MYSQL_HOST }}
+          MYSQL_PORT: ${{ vars.MYSQL_PORT }}
+          AUTH_TOKENS: ${{ secrets.AUTH_TOKENS }}
+      run: |
+        echo "--- Starting app in background"
+        python3 code/app.py &
+        echo "--- Sleep(3)"
+        sleep 3
+        echo "--- Starting PyTest"
+        pytest code
+
+
+  build-push:
+    runs-on: ubuntu-latest
+
+    needs:
+    - app-pytest
+
+    # We need to have a successful app-pytest before
+    if: ${{ needs.app-pytest.result == 'success' }}
+
+    steps:
+    - name: Checkout 🛎️
+      uses: actions/checkout@v4
+
+    - name: Log in to Docker Hub 🔐
+      uses: docker/login-action@v3
+      with:
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Extracting Metadata 🔧
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_IMAGE }}
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=sha,prefix=,suffix=,format=short
+          type=edge
+          type=raw,value=latest
+
+    - name: Build 🏗️ & Push to Docker Hub 🚀  
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
