@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM alpine:3.19
 
 RUN adduser -h /code -u 1000 -D -H api
 
@@ -18,10 +18,10 @@ RUN apk update --no-cache \
         "py3-pip>=23" \
         "tzdata>=2023" \
     && apk add --no-cache --virtual .build-deps \
-        "gcc=~12" \
+        "gcc=~13" \
         "libc-dev=~0.7" \
         "python3-dev>=3.11" \
-        "g++=~12" \
+        "g++=~13" \
         "jpeg-dev>=9e-r1" \
         "libffi-dev>=3.4.4-r2" \
         "zlib-dev>=1.2.13-r1" \
