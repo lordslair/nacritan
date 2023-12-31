@@ -688,6 +688,8 @@ def get_worldmap():
         "Rivière": (0, 102, 255),
         "Montagne": (165, 42, 42),
         "Forêt": (107, 142, 35),
+        "Désert": (255, 204, 153),
+        "Marais": (51, 102, 0),
         }
 
     img = Image.new('RGBA', (1000, 500), (0, 0, 0, 0))
