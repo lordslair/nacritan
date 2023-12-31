@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nacritan
+  name: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      restartPolicy: Always
+
+      containers:
+      - name: mariadb
+        image: mariadb:11.2
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 200m
+          requests:
+            memory: 64Mi
+            cpu: 100m
+        volumeMounts:
+        - name: mariadb-volume
+          mountPath: /var/lib/mysql
+        env:
+        # MARIADB env vars
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-root-password
+
+      volumes:
+      - name: mariadb-volume
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nacritan
+  name: mariadb-svc
+spec:
+  selector:
+    app: mariadb
+  ports:
+  - protocol: TCP
+    port: 3306

@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  namespace: nacritan
+  name: mariadb-pvc
+spec:
+  storageClassName: csi-cinder-classic
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: nacritan
+  name: certbot-certs-pvc
+spec:
+  storageClassName: csi-cinder-classic
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: nacritan
+  name: certbot-www-pvc
+spec:
+  storageClassName: csi-cinder-classic
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+status: {}

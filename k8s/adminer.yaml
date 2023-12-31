@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nacritan
+  name: adminer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adminer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: adminer
+    spec:
+      restartPolicy: Always
+
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mariadb
+            topologyKey: topology.kubernetes.io/zone
+
+      containers:
+      - name: adminer
+        image: adminer:4.8.1
+        resources:
+          limits:
+            memory: 64Mi
+            cpu: 100m
+          requests:
+            memory: 64Mi
+            cpu: 100m
+        env:
+        # ADMINER env vars
+        - name: ADMINER_DEFAULT_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-host
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nacritan
+  name: adminer-svc
+spec:
+  selector:
+    app: adminer
+  ports:
+  - protocol: TCP
+    port: 8080

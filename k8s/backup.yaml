@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nacritan
+  name: backup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backup
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: backup
+    spec:
+      restartPolicy: Always
+
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mariadb
+            topologyKey: topology.kubernetes.io/zone
+
+      containers:
+      - name: backup
+        image: lordslair/easydbbackup:1.6.0
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 128Mi
+            cpu: 200m
+          requests:
+            memory: 64Mi
+            cpu: 100m
+        env:
+        - name: SQLITE_DUMP
+          value: 'False' # Boolean (True|False)
+        - name: REDIS_DUMP
+          value: 'False' # Boolean (True|False)
+        - name: MYSQL_DUMP
+          value: 'True'  # Boolean (True|False)
+        - name: MYSQL_DB_LIST
+          valueFrom:
+            secretKeyRef:
+              name: backup-secret
+              key: backup-db-list
+        - name: MYSQL_DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-host
+        - name: MYSQL_DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-port
+        - name: MYSQL_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-user
+        - name: MYSQL_DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secret
+              key: mariadb-pass
+        - name: RCLONE_CONFIG_PCS_TYPE
+          value: 'swift'
+        - name: RCLONE_CONFIG_PCS_ENV_AUTH
+          value: 'false'
+        - name: RCLONE_CONFIG_PCS_AUTH_VERSION
+          value: '3'
+        - name: RCLONE_CONFIG_PCS_TENANT_DOMAIN
+          value: 'default'
+        - name: RCLONE_CONFIG_PCS_DOMAIN
+          value: 'default'
+        - name: RCLONE_CONFIG_PCS_AUTH
+          valueFrom:
+            secretKeyRef:
+              name: pcs-secret
+              key: pcs-auth
+        - name: RCLONE_CONFIG_PCS_TENANT
+          valueFrom:
+            secretKeyRef:
+              name: pcs-secret
+              key: pcs-tenant
+        - name: RCLONE_CONFIG_PCS_USER
+          valueFrom:
+            secretKeyRef:
+              name: pcs-secret
+              key: pcs-user
+        - name: RCLONE_CONFIG_PCS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: pcs-secret
+              key: pcs-key
+        - name: RCLONE_CONFIG_PCS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: pcs-secret
+              key: pcs-region
+        - name: RCLONE_CONFIG_PCS_DIR
+          valueFrom:
+            secretKeyRef:
+              name: backup-secret
+              key: backup-dir
