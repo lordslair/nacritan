@@ -36,7 +36,7 @@ pillow==10.1.0
     # via -r code/requirements.in
 pymysql==1.1.0
     # via -r code/requirements.in
-redis==5.0.1
+redis==5.0.3
     # via -r code/requirements.in
 sqlalchemy==2.0.21
     # via
