@@ -48,7 +48,7 @@ sqlalchemy==2.0.21
     # via
     #   flask-sqlalchemy
     #   sqlalchemy-serializer
-sqlalchemy-serializer==1.4.1
+sqlalchemy-serializer==1.4.12
     # via -r requirements.in
 typing-extensions==4.8.0
     # via sqlalchemy

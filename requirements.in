@@ -7,4 +7,4 @@ loguru ~= 0.7
 Pillow ~= 10.3
 PyMySQL ~= 1.1.0
 Redis ~= 5.0
-SQLAlchemy-Serializer ~= 1.4.1
+SQLAlchemy-Serializer ~= 1.4.12
