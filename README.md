@@ -2,16 +2,20 @@
 
 This project is a backend for a Tactical Interface (IT) in the game Nacridan.  
 Its purpose is to parse data received from JS user scripts.  
-It's done by a Python backend (Flask API) querying a (remote) MySQL DB.  
+It's done by a Python backend (Flask API) querying a MySQL DB.  
 
 All of this inside Docker containers for portable purposes.  
 These containers are powered up by Kubernetes.  
 
 Actually, it works this way :
 
- - (nacritan-backend-nginx)      runs the proxy to serve the URLs, and SSL certs
- - (nacritan-backend-api)        runs the Flask app
- - (nacritan-backend-backup)     runs the DB rotating backups 24h/30d/52w/12m
+ - (nacritan-nginx)      runs the proxy to serve the URLs, and SSL certs
+ - (nacritan-api)        runs the Flask app
+ - (nacritan-mariadb)    runs the Database
+
+ Optionnal:
+ - (nacritan-adminer)     runs the DB rotating backups 24h/30d/52w/12m
+ - (nacritan-backup)     runs the DB rotating backups 24h/30d/52w/12m
 
 ### Which script does what ?
 
@@ -46,7 +50,7 @@ And of course GitHub to store all these shenanigans.
 
 ```
      +-----------------------------------------------+
-     |                  LoadBalancer:443             |
+     |                  NodePort:30443               |
      +-----------------------+-----------------------+
                              |
                     +--------v--------+
@@ -56,6 +60,10 @@ And of course GitHub to store all these shenanigans.
                     +--------v--------+
                     |    Flask:5000   |
                     |  (main app.py)  |
+                    +--------+--------+
+                             |
+                    +--------v--------+
+                    |  MariaDB:3306   |
                     +-----------------+
 ```
 
@@ -73,32 +81,37 @@ $ kubectl apply -f *
 ```
 
 This will create :
-- The 2 pods : nginx, api (+ backup if needed)
+- The 3 pods : nginx, api, mariadb (+ backup, adminer if needed)
 
 ```
 $ kubectl get pods
-NAME                                          READY   STATUS    RESTARTS   AGE
-nacritan-backend-api-65b887758f-259gd         1/1     Running   0          17m
-nacritan-backend-nginx-8f5cf6c7d-twjzw        2/2     Running   0          5h
+NAME                       READY   STATUS    RESTARTS       AGE
+adminer-66f84fc484-qj7lj   1/1     Running   0              95d
+api-769b969d98-rgmk4       1/1     Running   0              95d
+backup-cdddf5787-5742g     1/1     Running   0              95d
+mariadb-d5b7cf965-zcx4s    1/1     Running   0              95d
+nginx-5cc68db8d7-rchxb     2/2     Running   0              33m
 ```
 
 - The 2 volumes : certbot-certs, certbot-www
 
 ```
 $ kubectl get pvc
-NAME                            STATUS  VOLUME                   CAPACITY  [...]
-nacritan-backend-certbot-certs  Bound   pvc-[...]-5312025190d9   1Gi       [...]
-nacritan-backend-certbot-www    Bound   pvc-[...]-d6ab9d74cf8b   1Gi       [...]
+NAME               STATUS  VOLUME                   CAPACITY  [...]
+certbot-certs-pvc  Bound   pvc-[...]-5312025190d9   1Gi       [...]
+certbot-www-pvc    Bound   pvc-[...]-d6ab9d74cf8b   1Gi       [...]
+mariadb-pvc        Bound   pvc-[...]-4bb1880ac35c   1Gi       [...]
 ```
 
 - The 3 services : nginx, api & loadbalancer
 
 ```
 $ kubectl get services
-NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP  PORT(S)
-nacritan-lb                  LoadBalancer   10.3.40.58     [...]        80:30985/TCP,8080:30619/TCP
-nacritan-backend-api         ClusterIP      10.3.138.0     <none>       5000/TCP
-nacritan-backend-nginx       ClusterIP      10.3.202.163   <none>       80/TCP,443/TCP
+NAME          TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
+adminer-svc   ClusterIP   10.3.160.18    <none>        8080/TCP                     155d
+api-svc       ClusterIP   10.3.223.39    <none>        5000/TCP                     155d
+mariadb-svc   ClusterIP   10.3.103.199   <none>        3306/TCP                     155d
+nginx-svc     NodePort    10.3.140.182   <none>        80:30080/TCP,443:30443/TCP   31m
 ```
 
 #### Disclaimer/Reminder
