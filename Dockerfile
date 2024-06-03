@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.20
 
 RUN adduser -h /code -u 1000 -D -H api
 
@@ -19,12 +19,12 @@ RUN apk update --no-cache \
         "tzdata>=2023" \
     && apk add --no-cache --virtual .build-deps \
         "gcc=~13" \
-        "libc-dev=~0.7" \
-        "python3-dev>=3.11" \
+        "musl-dev=~1.2" \
+        "python3-dev=~3.12" \
         "g++=~13" \
         "jpeg-dev>=9e-r1" \
-        "libffi-dev>=3.4.4-r2" \
-        "zlib-dev>=1.2.13-r1" \
+        "libffi-dev=~3.4" \
+        "zlib-dev=~1.3" \
     && su api -c \
         "pip3 install --break-system-packages --user -U -r requirements.txt && \
         rm requirements.txt" \
