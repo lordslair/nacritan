@@ -42,8 +42,6 @@ pycparser==2.21
     # via cffi
 pymysql==1.1.0
     # via -r requirements.in
-redis==5.0.4
-    # via -r requirements.in
 sqlalchemy==2.0.21
     # via
     #   flask-sqlalchemy
