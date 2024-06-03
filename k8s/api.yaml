@@ -30,9 +30,7 @@ spec:
 
       containers:
       - name: api
-        image: lordslair/nacritan:1.1.1
-        command: ["/bin/sh"]
-        args: ["-c", "while :; do sleep 12h; done;"]
+        image: lordslair/nacritan:latest
         resources:
           limits:
             memory: 128Mi
