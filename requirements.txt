@@ -38,15 +38,19 @@ markupsafe==2.1.5
     #   werkzeug
 pillow==10.3.0
     # via -r requirements.in
+psycopg2-binary==2.9.9
+    # via sqlalchemy-serializer
 pycparser==2.22
     # via cffi
 pymysql==1.1.1
     # via -r requirements.in
-sqlalchemy==2.0.30
+pytz==2024.1
+    # via sqlalchemy-serializer
+sqlalchemy==2.0.29
     # via
     #   flask-sqlalchemy
     #   sqlalchemy-serializer
-sqlalchemy-serializer==1.4.12
+sqlalchemy-serializer==1.4.21
     # via -r requirements.in
 typing-extensions==4.12.1
     # via sqlalchemy
