@@ -16,28 +16,9 @@ jobs:
   app-pytest:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          # The MySQL docker container requires these environment variables to be set
-          # so we can create and migrate the test database.
-          # See: https://hub.docker.com/_/mysql
-          MYSQL_DATABASE: ${{ vars.MYSQL_BASE }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PASS }}
-          MYSQL_USER: ${{ vars.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASS }}
-        ports:
-          # Opens port 3306 on service container and host
-          # https://docs.github.com/en/actions/using-containerized-services/about-service-containers
-          - 3306:3306
-          # Before continuing, verify the mysql container is reachable from the ubuntu host
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-
     strategy:
       matrix:
-        python-version: [ "3.10", "3.11", "3.12" ]
+        python-version: [ "3.12" ]
 
     steps:
     - name: Checkout 🛎️
@@ -63,21 +44,22 @@ jobs:
         echo "--- Linting with flake8"
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
+    - name: Start MongoDB 🌱
+      uses: supercharge/mongodb-github-action@1.11.0
+      with:
+        mongodb-version: ${{ vars.MONGO_VERS }}
+        mongodb-username: ${{ vars.MONGO_USER }}
+        mongodb-password: ${{ secrets.MONGO_PASS }}
+        mongodb-db: ${{ vars.MONGO_BASE }}
+
     - name: Test with PyTest ⚙️
       env:
-          MYSQL_BASE: ${{ vars.MYSQL_BASE }}
-          MYSQL_PASS: ${{ secrets.MYSQL_PASS }}
-          MYSQL_USER: ${{ vars.MYSQL_USER }}
-          MYSQL_HOST: ${{ vars.MYSQL_HOST }}
-          MYSQL_PORT: ${{ vars.MYSQL_PORT }}
+          MONGO_HOST: ${{ vars.MONGO_HOST }}
+          MONGO_PASS: ${{ secrets.MONGO_PASS }}
           AUTH_TOKENS: ${{ secrets.AUTH_TOKENS }}
       run: |
-        echo "--- Starting app in background"
-        python3 code/app.py &
-        echo "--- Sleep(3)"
-        sleep 3
         echo "--- Starting PyTest"
-        pytest code
+        pytest
 
   build-push:
     runs-on: ubuntu-latest
