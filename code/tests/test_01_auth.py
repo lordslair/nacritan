@@ -31,14 +31,20 @@ def test_nacritan_auth_MyRightToken_infos():
     assert response.status_code == 200
 
 
-def test_nacritan_auth_MyRightToken_gdc():
-    route = '/gdc'
-    response = app.test_client().open(route, headers=header_ok)
-    assert response.status_code == 200
-
-
 # We work without token, as it is 'public' URLs
 def test_nacritan_auth_public_worldmap():
     route = '/worldmap'
     response = app.test_client().open(route)
     assert response.status_code == 200
+
+
+# We work with the real token, but Player not in GdC so we aim to receive 404
+tokens = eval(os.environ['AUTH_TOKENS'])
+token = list(tokens.keys())[list(tokens.values()).index('PyTest')]
+header_ok = json.loads('{"Authorization": "Basic ' + token + '"}')
+
+
+def test_nacritan_auth_MyRightToken_gdc():
+    route = '/gdc'
+    response = app.test_client().open(route, headers=header_ok)
+    assert response.status_code == 404
