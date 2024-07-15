@@ -25,17 +25,17 @@ spec:
               - key: app
                 operator: In
                 values:
-                - mariadb
+                - api
             topologyKey: topology.kubernetes.io/zone
 
       containers:
       - name: backup
-        image: lordslair/easydbbackup:1.6.0
+        image: lordslair/easydbbackup:1.7.0
         imagePullPolicy: Always
         resources:
           limits:
             memory: 128Mi
-            cpu: 200m
+            cpu: 100m
           requests:
             memory: 64Mi
             cpu: 100m
@@ -45,32 +45,36 @@ spec:
         - name: REDIS_DUMP
           value: 'False' # Boolean (True|False)
         - name: MYSQL_DUMP
+          value: 'False'  # Boolean (True|False)
+          # MONGODB specifics
+        - name: MONGODB_DUMP
           value: 'True'  # Boolean (True|False)
-        - name: MYSQL_DB_LIST
+        - name: MONGODB_EXPORT
           valueFrom:
             secretKeyRef:
               name: backup-secret
-              key: backup-db-list
-        - name: MYSQL_DB_HOST
+              key: backup-mongodb-export
+        - name: MONGO_DB_LIST
           valueFrom:
             secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-host
-        - name: MYSQL_DB_PORT
+              name: backup-secret
+              key: backup-mongodb-dblist
+        - name: MONGO_DB_HOST
           valueFrom:
             secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-port
-        - name: MYSQL_DB_USER
+              name: backup-secret
+              key: backup-mongodb-host
+        - name: MONGO_DB_USER
           valueFrom:
             secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-user
-        - name: MYSQL_DB_PASS
+              name: mongodb-secret
+              key: mongodb-user
+        - name: MONGO_DB_PASS
           valueFrom:
             secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-pass
+              name: mongodb-secret
+              key: mongodb-pass
+        # RCLONE specifics
         - name: RCLONE_CONFIG_PCS_TYPE
           value: 'swift'
         - name: RCLONE_CONFIG_PCS_ENV_AUTH

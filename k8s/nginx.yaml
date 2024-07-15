@@ -25,7 +25,7 @@ spec:
               - key: app
                 operator: In
                 values:
-                - mariadb
+                - api
             topologyKey: topology.kubernetes.io/zone
 
       containers:
@@ -162,41 +162,6 @@ data:
       }
     }
 
-    server {
-      listen      80;
-      server_name sql.nacritan.lordslair.net;
-      access_log  /var/log/nginx/access.log nacritan;
-
-      location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-      }
-    }
-    server {
-      listen 443 ssl;
-      server_name sql.nacritan.lordslair.net;
-      access_log  /var/log/nginx/access.log nacritan;
-
-      add_header          Strict-Transport-Security 'max-age=63072000; includeSubDomains; preload;' always;
-
-      ssl_session_cache   shared:SSL:10m;
-      ssl_session_timeout 1440m;
-      ssl_session_tickets off;
-
-      ssl_protocols       TLSv1.2 TLSv1.3;
-      ssl_prefer_server_ciphers on;
-      ssl_ciphers         ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384;
-
-      ssl_certificate     /etc/letsencrypt/live/sql.nacritan.lordslair.net/fullchain.pem;
-      ssl_certificate_key /etc/letsencrypt/live/sql.nacritan.lordslair.net/privkey.pem;
-
-      location / {
-        proxy_pass          http://adminer-svc:5000;
-        proxy_http_version  1.1;
-        proxy_buffers       16 16k;
-        proxy_buffer_size   16k;
-        proxy_set_header    Host            $host;
-      }
-    }
   config-80-only : |
     log_format nacritan '$remote_addr - $remote_user [$time_local] '
                         '"$request" $status $body_bytes_sent '
@@ -219,15 +184,6 @@ data:
     server {
       listen      80;
       server_name api.nacritan.lordslair.net;
-      access_log  /var/log/nginx/access.log nacritan;
-
-      location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-      }
-    }
-    server {
-      listen      80;
-      server_name sql.nacritan.lordslair.net;
       access_log  /var/log/nginx/access.log nacritan;
 
       location /.well-known/acme-challenge/ {

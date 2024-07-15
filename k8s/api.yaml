@@ -17,20 +17,9 @@ spec:
     spec:
       restartPolicy: Always
 
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - mariadb
-            topologyKey: topology.kubernetes.io/zone
-
       containers:
       - name: api
-        image: lordslair/nacritan:latest
+        image: lordslair/nacritan:1.2.0
         resources:
           limits:
             memory: 128Mi
@@ -45,31 +34,16 @@ spec:
         - name: FLASK_THREAD
           value: '--without-threads'
         # SQL env vars
-        - name: MYSQL_HOST
+        - name: MONGO_HOST
           valueFrom:
             secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-host
-        - name: MYSQL_PORT
+              name: mongodb-secret
+              key: mongodb-host
+        - name: MONGO_PASS
           valueFrom:
             secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-port
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-user
-        - name: MYSQL_PASS
-          valueFrom:
-            secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-pass
-        - name: MYSQL_BASE
-          valueFrom:
-            secretKeyRef:
-              name: mariadb-secret
-              key: mariadb-base
+              name: mongodb-secret
+              key: mongodb-pass
         # AUTH env vars
         - name: AUTH_TOKENS
           valueFrom:
@@ -88,6 +62,8 @@ spec:
           value: 'true'
         - name: LOGURU_DEBUG_COLOR
           value: '<cyan><bold>'
+        - name: LOGURU_TRACE_COLOR
+          value: '<blue><bold>'
         - name: LOGURU_LEVEL
           value: 'TRACE'
         # Other env vars
