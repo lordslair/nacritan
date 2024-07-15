@@ -31,7 +31,7 @@ markupsafe==2.1.5
     #   werkzeug
 mongoengine==0.28.2
     # via -r requirements.in
-pillow==10.3.0
+pillow==10.4.0
     # via -r requirements.in
 pymongo==4.8.0
     # via mongoengine
